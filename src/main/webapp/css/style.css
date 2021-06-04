@@ -1,0 +1,381 @@
+* { margin:0; padding:0; -ms-box-sizing: border-box; -moz-box-sizing: border-box; -o-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing:border-box;}
+a { text-decoration:underline; outline:0; cursor:pointer; margin:0; padding:0; color: #dfde34; -webkit-transition: all 0.1s ease; -moz-transition: all 0.1s ease; -o-transition: all 0.1s ease; transition: all 0.1s ease;}
+a:hover { text-decoration:none;}
+img { border:0; max-width:100%; height:auto;}
+ul, ol { list-style-type:none;}
+html { height:100%;}
+body { height:100%; font:15px/24px 'Ubuntu', serif; color:#3d3d3d; background:#fff;}
+.clear { clear:both; height:0; font-size:0;}
+.clearfix:after { display:block; content:"."; clear:both; font-size:0; line-height:0; height:0; overflow:hidden;}
+
+h1, h2, h3, h4, h5, h6 { margin-bottom:24px; line-height:24px; font-weight:normal; color: #fffe36;}
+h1 { font-size:41px; line-height:40px; margin-bottom:32px;}dl, ol, ul
+h2 { font-size:26px; line-height:28px;}
+h3 { font-size:22px;}
+h4 { font-size:19px;}
+h5 { font-size:16px;}
+h6 { font-size:15px;}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block;}
+footer{
+    height: 170px;
+}
+#footer{
+    background-color: #def5ff
+    /*height: 180px;*/
+}
+.foot{
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.container {
+padding: 10px;
+}
+
+.viewData{
+  height:60px;
+  width: 100%;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid #ddd !important;
+}
+.viewData p{
+  padding-top: 17px;
+}
+
+.data{
+  margin-top: 4px;
+}
+
+.ordersHeader {
+  text-align: center;
+  font-size: 40px;
+  padding-bottom: 31px;
+  height: inherit;
+}
+.street{
+  width: 25%;
+  float: left;
+  height: inherit;
+}
+.costVoage{
+  width: 10%;
+  float: left;
+  height: inherit;
+}
+
+.idOrder{
+  width: 10%;
+  float: left;
+  height: inherit;
+}
+.nameClient{
+  width: 30%;
+  float: left;
+  height: inherit;
+
+}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+input[type=email]{
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+input[type=email]:focus{
+    background-color: #ddd;
+    outline: none;
+}
+
+
+.selectAdress{
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: white;
+border-radius:4px;border:2px solid #f1f1f1;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.register_btn {
+  background-color: #65d2ff;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.registerbtn:hover {
+  opacity:1;
+}
+
+
+.logout{
+  background-color: #009edf;;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  margin-top: 105px;
+  width: 30%;
+  opacity:1;
+}
+.logoutDriver{
+  background-color: #c0df5c;;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  margin-top: 60px;
+  width: 30%;
+  border-radius: 4px;
+  opacity:1;
+}
+.account-driver-btns{
+  background-color: #4ddf13;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 35%;
+  opacity:1;
+}
+.account-admin-btns{
+    background-color: #4ddf13;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 35%;
+    opacity:1;
+}
+.bad-order-input {
+    width: fit-content;
+    margin-left: 170px;
+    margin-top: 10px;
+    margin-bottom: -12px;
+}
+
+.text-order{
+  width: 35% !important;
+  height: 48px;
+  border-radius: 4px;
+}
+.make-order{
+  width: 100%;
+  margin-top: 10px;
+}
+
+a {
+  color: #edff34;
+}
+.liFont{
+  font-size: 26px !important;
+}
+.dr{
+  display: unset;
+}
+
+.signin .signup{
+  text-align: center;
+}
+
+.register{
+    width: 65%;
+    float: left;
+}
+
+.order{
+    width: 75%;
+    float: left;
+}
+
+.order-text{
+    font-size: 18px;
+    margin-bottom: 0px;
+}
+.formsOrder{
+  border: 2px solid  #f0f0f0;
+}
+.labelOrder{
+  width: 20%;
+  float: left;
+  padding: 5px;
+}
+.label-text{
+  color: #3f3f3f;
+}
+
+.inputOrder{
+  width: 80%;
+  float: right;
+  padding-right: 20px;
+}
+
+.inputO{
+  border-radius: 4px;
+    border: 2px solid #f1f1f1 !important;
+    background-color: white !important;
+}
+
+.buttonSub{
+    font-size: 20px;
+    line-height: 44px;
+    height: 44px;
+    margin-top: 12px;
+    padding: 0 22px;
+    text-transform: uppercase;
+    color: #472d00;
+    margin: auto;
+    background-color: #fed402;
+    border-radius:10px;
+}
+
+
+.signClient{
+    width: 232px;
+    padding: 10px 0;
+    float: left;
+    height: 56px;
+}
+
+
+.car{
+  background-image:url(../img/car-standard.jpg);
+}
+.truck{
+  background-image:url(../img/car-van.png);
+}
+.wagon{background-image:url(../img/car-universal.jpg);}
+
+.errorsM{
+    font-size: 13px;
+    color: red;
+}
+
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+
+    width:40px;
+    height:40px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+.radbox{
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  float: left;
+}
+
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+
+
+.nazar{
+  min-height: 400px;
+  margin-top: 80px;
+  margin-bottom: 30px;
+}
+.row{
+  margin: 0px;
+}
+.nazar li{
+  padding: 16px 0px 33px 48px;
+    font-size: 33px;
+    font-family: "centyry gotic";
+}
+
+.a-center { text-align:center;}
+
+.thumb img { display:block;}
+
+.text .alignleft { float:left; margin:0 22px 24px 0;}
+.text .alignright { float:right; margin:0 0 24px 22px;}
+.text .aligncenter { display:block; margin:0 auto 24px;}
+.text .alignnone { margin-bottom:24px;}
+
+.center { max-width:1000px; margin:0 auto; position:relative; padding:0 20px;}
+
+table { width:100%; border-collapse:collapse; border-spacing:0;}
+.header_white { background: #ffffff; padding:9px 0 11px;}
+
+#logo { float:left; display:block;}
+.header_city { float:right;margin-right: 38px; width:140px; padding:10px 0; vertical-align:top; text-align:center;}
+.lang_block { position:absolute; top:17px; right:15px;}
+#lang li { margin:0 1px; float:left;}
+#lang li a { display:block; height:25px; line-height:25px; width:25px; text-align:center; font-weight:500; font-size:14px; color:#009edf; text-decoration:none;}
+#lang li.current-lang a, #lang li a:hover { background: #fff133; color:#fff;}
+.header_green { background: #df2914; color: #1823df; position:relative;}
+
+.center { max-width:1000px; margin:0 auto; position:relative; padding:0 20px;}
+
+p:empty { display:none;}
+.text { padding-bottom:24px; font-weight:300;}
+.text p { margin-bottom:24px;}
+.text ol { list-style:decimal inside; margin:0 0 24px 0;}
+.text ul { list-style:disc inside; margin:0 0 24px 0;}
+.text ol li, .text ul li { margin-bottom:6px;}
+
+
+
+.order-text-about{
+    padding-bottom: 12px;
+}
+.text_section {margin-bottom: 20px;}
