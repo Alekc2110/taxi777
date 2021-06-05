@@ -14,6 +14,6 @@ public class RegisterUserCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.info("return register client page");
-        return Path.REGISTER_CLIENT;
+        return Path.PAGE_REGISTER_CLIENT;
     }
 }

@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ShowAllDriverOrdersCommand extends Command {
-//    public ShowAllDriverOrdersCommand(OrderService orderService) {
-//        super();
-//    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

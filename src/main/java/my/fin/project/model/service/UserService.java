@@ -1,6 +1,5 @@
 package my.fin.project.model.service;
 
-import my.fin.project.controller.command.common.RegistrationCommand;
 import my.fin.project.exceptions.EmailExistException;
 import my.fin.project.exceptions.PhoneNumExistException;
 import my.fin.project.model.db.DaoFactory;

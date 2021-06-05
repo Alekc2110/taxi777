@@ -31,21 +31,13 @@ public class CommandContainer {
         commands.put(CLIENT_ACCOUNT, new ClientAccountCommand());
         commands.put(ADMIN_ACCOUNT, new AdminAccountCommand());
         commands.put(DRIVER_ACCOUNT, new DriverAccountCommand());
-//        commands.put(SHOW_ALL_ORDERS_PAG, new ShowAllDriverOrdersCommand(new OrderService()));
         commands.put(FORBIDDEN, new ErrorForbiddenCommand());
-//        commands.put(ENTER_ORDER, new EnterOrderCommand(new OrderService(), new DriverService(),
-//                new AddressService()));
+        commands.put(ENTER_ORDER, new EnterOrderCommand());
         commands.put(SHOW_CLIENT_ORDER, new ShowOrderClientCommand());
-//        commands.put(ENTER_NUMBER_OF_ORDER, new DriverEnterNumberOrderCommand(new OrderService()));
 //        commands.put(NO_COMMAND, new NoCommand());
     }
 
     public static Command getCommand(String commandName) {
-//        if (commandName == null || !commands.containsKey(commandName)) {
-//            LOG.trace("Command not found, name --> " + commandName);
-//            return commands.get("noCommand");
-//        }
-
         return commands.get(commandName);
     }
 

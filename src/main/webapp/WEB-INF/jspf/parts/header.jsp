@@ -13,7 +13,7 @@
         </a>
         <div style="float: right; width: 420px">
             <div class="signClient">
-                <p style="float: left;padding-top: 7px; color: #009EDF"><c:out value="${sessionScope.loginedUser.username}"/></p>
+                <p style="float: left;padding-top: 10px; color: #009EDF"><c:out value="${sessionScope.loginedUser.username}"/></p>
 
                 <a href="${pageContext.request.contextPath}/taxi/login">
                     <div style="margin: auto; float: right; height: 36px;">
@@ -23,7 +23,7 @@
             </div>
 
             <div class="header_city">
-                <div class="city_current"><fmt:message key="label.current.city"/></div>
+                <div class="city_current"><h1><fmt:message key="label.current.city"/></h1></div>
             </div>
 
             <div class="lang_block">

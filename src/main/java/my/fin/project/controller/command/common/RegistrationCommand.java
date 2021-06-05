@@ -23,6 +23,7 @@ public class RegistrationCommand extends Command {
     private static final String BAD_INPUT = "?badInput=true";
     private static final String BAD_EMAIL = "?badEmail=true";
     private static final String BAD_PHONE = "?badPhoneNumber=true";
+    private static final String REG_AGAIN = "?successReg=true";
     private final Logger LOG = Logger.getLogger(RegistrationCommand.class);
     private UserService userService;
 
@@ -41,12 +42,12 @@ public class RegistrationCommand extends Command {
 
         if (name == null) {
             LOG.info("Name == null, return register client");
-            return REGISTER_CLIENT;
+            return PAGE_REGISTER_CLIENT;
         }
         if (ValidationService.notValidData(name, phoneNumber,
                 email, password, repeatPassword)) {
             LOG.info("wrong data input");
-            return REGISTER_CLIENT + BAD_INPUT;
+            return PAGE_REGISTER_CLIENT + BAD_INPUT;
         }
 
         User client = new User.Builder().
@@ -58,19 +59,19 @@ public class RegistrationCommand extends Command {
 
         try {
             LOG.info("try write to database client");
-            Long savedUserId = userService.saveUser(client);
+            userService.saveUser(client);
         } catch (EmailExistException emailException) {
             LOG.error("EmailIsAlreadyTaken: ", emailException);
-            return REGISTER_CLIENT + BAD_EMAIL;
+            return PAGE_REGISTER_CLIENT + BAD_EMAIL;
         } catch (PhoneNumExistException phoneNumberException) {
             LOG.error("PhoneNumberIsAlreadyTaken ", phoneNumberException);
             phoneNumberException.printStackTrace();
-            return REGISTER_CLIENT + BAD_PHONE;
+            return PAGE_REGISTER_CLIENT + BAD_PHONE;
         }
 
         String contextAndServletPath = request.getContextPath() + request.getServletPath();
         LOG.info("return login page");
-        return REDIRECT + contextAndServletPath + LOGIN;
-        //TODO add if return id==-1, then redirect to login if ok - then to login with param
+        return REDIRECT + contextAndServletPath + LOGIN + REG_AGAIN;
+
     }
 }

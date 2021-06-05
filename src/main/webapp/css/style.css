@@ -8,7 +8,7 @@ body { height:100%; font:15px/24px 'Ubuntu', serif; color:#3d3d3d; background:#f
 .clear { clear:both; height:0; font-size:0;}
 .clearfix:after { display:block; content:"."; clear:both; font-size:0; line-height:0; height:0; overflow:hidden;}
 
-h1, h2, h3, h4, h5, h6 { margin-bottom:24px; line-height:24px; font-weight:normal; color: #fffe36;}
+h1, h2, h3, h4, h5, h6 { margin-bottom:24px; line-height:24px; font-weight:normal; color: #0e0bfe;}
 h1 { font-size:41px; line-height:40px; margin-bottom:32px;}dl, ol, ul
 h2 { font-size:26px; line-height:28px;}
 h3 { font-size:22px;}
@@ -196,7 +196,7 @@ hr {
 }
 
 a {
-  color: #edff34;
+  color: #0e0bfe;
 }
 .liFont{
   font-size: 26px !important;
@@ -256,7 +256,7 @@ a {
     text-transform: uppercase;
     color: #472d00;
     margin: auto;
-    background-color: #fed402;
+    background-color: #0e0bfe;
     border-radius:10px;
 }
 
@@ -357,12 +357,12 @@ table { width:100%; border-collapse:collapse; border-spacing:0;}
 .header_white { background: #ffffff; padding:9px 0 11px;}
 
 #logo { float:left; display:block;}
-.header_city { float:right;margin-right: 38px; width:140px; padding:10px 0; vertical-align:top; text-align:center;}
+.header_city { float:right;margin-right: 38px; width:140px; padding:10px 0; vertical-align:center; text-align:center;}
 .lang_block { position:absolute; top:17px; right:15px;}
 #lang li { margin:0 1px; float:left;}
 #lang li a { display:block; height:25px; line-height:25px; width:25px; text-align:center; font-weight:500; font-size:14px; color:#009edf; text-decoration:none;}
-#lang li.current-lang a, #lang li a:hover { background: #fff133; color:#fff;}
-.header_green { background: #df2914; color: #1823df; position:relative;}
+#lang li.current-lang a, #lang li a:hover { background: #191805; color:#fff;}
+.header_green { background: #45df0a; color: #141315; position:relative;}
 
 .center { max-width:1000px; margin:0 auto; position:relative; padding:0 20px;}
 

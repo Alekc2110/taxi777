@@ -25,6 +25,9 @@
                     <h1><fmt:message key="login.sign.up"/></h1>
                     <p><fmt:message key="login.fill.form"/></p>
                     <hr>
+                    <c:if test="${param.successReg == true}">
+                        <p class="alert-success"><fmt:message key="login.successful.reconnect"/></p>
+                    </c:if>
                     <c:if test="${param.wrongData == true}">
                         <p class="errorsM"><fmt:message key="login.incorrect.input"/></p>
                     </c:if>
@@ -37,7 +40,7 @@
                 </div>
 
                 <div class="container signup">
-                    <p><fmt:message key="login.have.no.acc"/> <a href="${pageContext.request.contextPath}/taxi/register">
+                    <p><fmt:message key="login.have.no.acc"/> <a href="${pageContext.request.contextPath}/taxi/registerClient">
                         <fmt:message key="login.sign.up"/></a>.</p>
                 </div>
                 <div style="height: 60px"></div>

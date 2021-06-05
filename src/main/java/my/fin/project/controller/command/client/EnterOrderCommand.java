@@ -8,12 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class EnterOrderCommand extends Command {
-//    public EnterOrderCommand(OrderService orderService, DriverService driverService, AddressService addressService, CouponService couponService) {
-//        super();
-//    }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         return null;
     }
 }

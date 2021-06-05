@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `taxi`.`user` (
   `phone_number` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `password_UNIQUE` (`password` ASC) VISIBLE,
   UNIQUE INDEX `phone_number_UNIQUE` (`phone_number` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;

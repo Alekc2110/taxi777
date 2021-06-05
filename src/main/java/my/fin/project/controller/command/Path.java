@@ -8,6 +8,9 @@ public interface Path {
     String PAGE_CLIENT_ACCOUNT = "/WEB-INF/jsp/client/clientAccount.jsp";
     String PAGE_ADMIN_ACCOUNT = "/WEB-INF/jsp/admin/adminAccount.jsp";
     String PAGE_DRIVER_ACCOUNT = "/WEB-INF/jsp/driver/driverAccount.jsp";
+    String PAGE_REGISTER_CLIENT = "/jsp/common/registerUser.jsp";
+    String PAGE_FORBIDDEN_403 = "/WEB-INF/jsp/error/403.jsp";
+    String PAGE_TAXI_ORDER = "/WEB-INF/jsp/client/order.jsp";
 
 
    //commands
@@ -24,7 +27,7 @@ public interface Path {
     String SHOW_ALL_ORDERS_PAG = "/showAllOrders";
     String SHOW_DRIVER_ORDERS_PAG = "/showDriverOrders";
     String FORBIDDEN = "/forbidden";
-  // String ENTER_ORDER = "/enterOrder";
+    String ENTER_ORDER = "/order";
     String SHOW_CLIENT_ORDER = "/showClientOrder";
     String NO_COMMAND = "/noCommand";
     String ENTER_NUMBER_OF_ORDER = "/enterNumOrder";
