@@ -1,6 +1,5 @@
 package my.fin.project.utils;
 
-import my.fin.project.model.entity.Person;
 import my.fin.project.model.entity.User;
 
 import javax.servlet.http.HttpSession;

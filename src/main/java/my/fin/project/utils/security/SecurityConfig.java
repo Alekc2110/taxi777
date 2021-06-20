@@ -18,6 +18,7 @@ public class SecurityConfig {
         urlClientPatterns.add(Path.MAKE_ORDER);
         urlClientPatterns.add(Path.CLIENT_ACCOUNT);
         urlClientPatterns.add(Path.LOGOUT);
+        urlClientPatterns.add(Path.ENTER_ORDER);
 
         mapConfig.put(Role.CLIENT, urlClientPatterns);
 

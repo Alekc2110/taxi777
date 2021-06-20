@@ -2,6 +2,7 @@ package my.fin.project.model.db.mapper;
 
 import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.enums.CarStatus;
+import my.fin.project.model.entity.enums.CarType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ public class CarMapper implements Mapper<Car>{
                 .setCarNumber(resultSet.getString("number"))
                 .setModel(resultSet.getString("model"))
                 .setColor(resultSet.getString("color"))
-                .setCarType(resultSet.getString("type"))
+                .setCarType(CarType.valueOf(resultSet.getString("type")))
                 .setCarStatus(CarStatus.valueOf(resultSet.getString("status")))
                 .setNumberSeats(resultSet.getInt("num_seats"))
                 .build();

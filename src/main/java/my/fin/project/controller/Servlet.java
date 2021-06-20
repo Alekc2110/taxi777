@@ -5,10 +5,16 @@ import my.fin.project.controller.command.CommandContainer;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static my.fin.project.controller.command.Path.*;
 

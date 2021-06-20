@@ -27,16 +27,18 @@ public class AuthenticationFilter implements Filter {
         String pathInfo = httpRequest.getPathInfo();
         String contextAndServletPath = httpRequest.getContextPath() + httpRequest.getServletPath();
         User loginedUser = LoginUserUtils.getLoginedUser(httpRequest.getSession());
-        LOG.info("get all info in do Filter");
+        LOG.info("get all info in doFilter");
         if ((LOGIN.equals(pathInfo) || REGISTER.equals(pathInfo)) && loginedUser != null) {
             if (loginedUser.getRole().equals(Role.CLIENT)) {
                 LOG.info("role = Client, return client account");
                 httpResponse.sendRedirect(contextAndServletPath + CLIENT_ACCOUNT);
+
             }
             if (loginedUser.getRole().equals(Role.ADMIN)) {
                 LOG.info("role = Admin, return admin account");
                 httpResponse.sendRedirect(contextAndServletPath + ADMIN_ACCOUNT);
-            } else {
+
+            } if (loginedUser.getRole().equals(Role.DRIVER)) {
                 LOG.info("role = Driver, return driver account");
                 httpResponse.sendRedirect(contextAndServletPath + DRIVER_ACCOUNT);
             }

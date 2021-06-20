@@ -13,10 +13,6 @@ public class JDBCDaoFactory extends DaoFactory {
     private static final Logger LOG = Logger.getLogger(JDBCDaoFactory.class);
     private DataSource dataSource = ConnectionPoolHolder.getDataSource();
 
-    @Override
-    public AddressDao createAddressDao() {
-        return new JDBCAddressDao(getConnection());
-    }
 
     @Override
     public CarDao createCarDao() {

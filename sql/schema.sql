@@ -10,20 +10,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema taxi
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `taxi`;
-
 CREATE SCHEMA IF NOT EXISTS `taxi` DEFAULT CHARACTER SET utf8 ;
 USE `taxi` ;
-
--- -----------------------------------------------------
--- Table `taxi`.`address`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `taxi`.`address` (
-  `address_id` INT NOT NULL,
-  `street` VARCHAR(45) NULL,
-  `house_number` VARCHAR(45) NULL,
-  PRIMARY KEY (`address_id`))
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `taxi`.`user`
@@ -35,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `taxi`.`user` (
   `phone_number` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `password_UNIQUE` (`password` ASC) VISIBLE,
   UNIQUE INDEX `phone_number_UNIQUE` (`phone_number` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -78,17 +67,15 @@ CREATE TABLE IF NOT EXISTS `taxi`.`order` (
   `order_status` VARCHAR(45) NOT NULL,
   `client_id` INT NOT NULL,
   `driver_id` INT NOT NULL,
-  `dest_address_id` INT NOT NULL,
-  `arr_address_id` INT NOT NULL,
+  `depart_address` VARCHAR(255) NOT NULL,
+  `arr_address` VARCHAR(255) NOT NULL,
   `cost` DECIMAL(10) NOT NULL,
-  `discount_cost` DECIMAL(10) NULL,
   `car_id` INT NOT NULL,
-  `creation_date` DATE NOT NULL,
+  `creation_date` DATETIME NOT NULL,
+  `distance` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`order_id`),
   INDEX `fkclient_id_idx` (`client_id` ASC) VISIBLE,
   INDEX `fkdriver_id_idx` (`driver_id` ASC) VISIBLE,
-  INDEX `fkdest_address_id_idx` (`dest_address_id` ASC) VISIBLE,
-  INDEX `fkarr_address_id_idx` (`arr_address_id` ASC) VISIBLE,
   INDEX `fkcar_id_idx` (`car_id` ASC) VISIBLE,
   CONSTRAINT `fkclient_id`
     FOREIGN KEY (`client_id`)
@@ -100,16 +87,6 @@ CREATE TABLE IF NOT EXISTS `taxi`.`order` (
     REFERENCES `taxi`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fkdest_address_id`
-    FOREIGN KEY (`dest_address_id`)
-    REFERENCES `taxi`.`address` (`address_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fkarr_address_id`
-    FOREIGN KEY (`arr_address_id`)
-    REFERENCES `taxi`.`address` (`address_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
   CONSTRAINT `fkcar_id`
     FOREIGN KEY (`car_id`)
     REFERENCES `taxi`.`car` (`car_id`)
@@ -124,7 +101,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `taxi`.`discount` (
   `dis_id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
-  `discout_rate` INT NULL,
+  `discount_rate` INT NULL,
   `total_sum` DECIMAL(10) NULL,
   PRIMARY KEY (`dis_id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,

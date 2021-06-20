@@ -13,8 +13,10 @@
         </a>
         <div style="float: right; width: 420px">
             <div class="signClient">
-                <p style="float: left;padding-top: 10px; color: #009EDF"><c:out value="${sessionScope.loginedUser.username}"/></p>
-
+<%--                <a href="${pageContext.request.contextPath}/taxi/clientAccount"> add if verification if role USER, ADMIN, DRIVER--%>
+                    <p style="float: left; padding-top: 10px; color: #009EDF"><c:out
+                            value="${sessionScope.loginedUser.username}"/></p>
+<%--                </a>--%>
                 <a href="${pageContext.request.contextPath}/taxi/login">
                     <div style="margin: auto; float: right; height: 36px;">
                         <img src="${pageContext.request.contextPath}/img/enter-icon.jpg" style="height: 56px">
@@ -28,7 +30,7 @@
 
             <div class="lang_block">
                 <ul id="lang">
-                    <li class="lang-item lang-item-2">
+                    <li class="lang-item lang-item-5">
                         <a href="?locale=ru">ru</a>
                     </li>
                     <li class="lang-item lang-item-5">

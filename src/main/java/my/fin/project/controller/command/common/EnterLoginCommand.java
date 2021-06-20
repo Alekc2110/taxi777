@@ -56,18 +56,16 @@ public class EnterLoginCommand extends Command {
                 }
             }
             user = userService.getUser(phoneNumber, password);
+            LoginUserUtils.saveLoginedUser(request.getSession(), user);
             if (user.getRole().equals(Role.CLIENT)) {
                 LOG.info("return client account");
-                LoginUserUtils.saveLoginedUser(request.getSession(), user);
                 return REDIRECT + contextAndServletPath + CLIENT_ACCOUNT;
             }
             if (user.getRole().equals(Role.ADMIN)) {
                 LOG.info("return admin account");
-                LoginUserUtils.saveLoginedUser(request.getSession(), user);
                 return REDIRECT + contextAndServletPath + ADMIN_ACCOUNT;
             }
             LOG.info("return driver account");
-            LoginUserUtils.saveLoginedUser(request.getSession(), user);
             return REDIRECT + contextAndServletPath + DRIVER_ACCOUNT;
         }
 

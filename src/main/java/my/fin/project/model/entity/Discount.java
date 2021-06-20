@@ -1,36 +1,49 @@
 package my.fin.project.model.entity;
 
+
 public class Discount extends Entity {
 
-    private User client;
+    private Long clientId;
     private int discountRate;
     private int totalSumRides;
 
     public Discount() {
     }
 
-    public Discount(User client, int discountRate, int totalSumRides) {
-        this.client = client;
+    public Discount(Long clientId, int discountRate, int totalSumRides) {
+        this.clientId = clientId;
         this.discountRate = discountRate;
         this.totalSumRides = totalSumRides;
     }
 
-    public User getClient() {
-        return client;
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public int getDiscountRate() {
         return discountRate;
     }
 
+    public void setDiscountRate(int discountRate) {
+        this.discountRate = discountRate;
+    }
+
     public int getTotalSumRides() {
         return totalSumRides;
+    }
+
+    public void setTotalSumRides(int totalSumRides) {
+        this.totalSumRides = totalSumRides;
     }
 
     @Override
     public String toString() {
         return "Discount{" +
-                "client=" + client +
+                "clientId=" + clientId +
                 ", discountRate=" + discountRate +
                 ", totalSumRides=" + totalSumRides +
                 '}';

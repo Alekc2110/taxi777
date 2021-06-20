@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
@@ -25,40 +25,40 @@
                     <p><fmt:message key="register.ask.to.fill"/></p>
                     <hr>
 
-                    <label><b><fmt:message key="register.name"/></b></label>
+                    <label for="name"><b><fmt:message key="register.name"/></b></label>
                     <c:if test="${param.badInput == true}">
                         <p class="errorsM"><fmt:message key="register.name.error"/></p>
                     </c:if>
-                    <input type="text" placeholder="<fmt:message key="register.name"/>" name="name" required>
+                    <input id="name" type="text" placeholder="<fmt:message key="register.name"/>" name="name" required/>
 
-                    <label><b><fmt:message key="register.phone.number"/></b></label>
+                    <label for="phone"><b><fmt:message key="register.phone.number"/></b></label>
                     <c:if test="${param.badInput == true}">
                         <p class="errorsM"><fmt:message key="register.phone.number.error"/></p>
                     </c:if>
                     <c:if test="${param.badPhoneNumber == true}">
                         <p class="errorsM"><fmt:message key="register.bad.phone.number"/></p>
                     </c:if>
-                    <input type="text" placeholder="<fmt:message key="register.phone.number"/>" name="phone_number" required>
+                    <input id="phone" type="text" placeholder="<fmt:message key="register.phone.number"/>" name="phone_number" required/>
                     <br>
 
-                    <label><b><fmt:message key="register.email"/></b></label>
+                    <label for="email"><b><fmt:message key="register.email"/></b></label>
                     <c:if test="${param.badInput == true}">
                         <p class="errorsM"><fmt:message key="register.email.error"/></p>
                     </c:if>
                     <c:if test="${param.badEmail == true}">
                         <p class="errorsM"><fmt:message key="register.email.error2"/></p>
                     </c:if>
-                    <input type="email" placeholder="<fmt:message key="register.email"/>" name="email" required>
+                    <input id="email" type="email" placeholder="<fmt:message key="register.email"/>" name="email" required/>
                     <hr>
 
-                    <label><b><fmt:message key="register.password"/></b></label>
+                    <label for="pass"><b><fmt:message key="register.password"/></b></label>
                     <c:if test="${param.badInput == true}">
                         <p class="errorsM"><fmt:message key="register.password.error"/></p>
                     </c:if>
-                    <input type="password" placeholder="<fmt:message key="register.enter.password"/>" name="password" required>
+                    <input id="pass" type="password" placeholder="<fmt:message key="register.enter.password"/>" name="password" required/>
 
-                    <label><b><fmt:message key="register.repeat.password"/></b></label>
-                    <input type="password" placeholder="<fmt:message key="register.repeat.password"/>" name="password_repeat" required>
+                    <label for="repPass"><b><fmt:message key="register.repeat.password"/></b></label>
+                    <input id="repPass" type="password" placeholder="<fmt:message key="register.repeat.password"/>" name="password_repeat" required/>
                     <hr>
 
                     <p><fmt:message key="register.agree.creating"/><a href="#">

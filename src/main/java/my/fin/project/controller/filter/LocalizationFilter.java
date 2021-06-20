@@ -26,7 +26,7 @@ public class LocalizationFilter implements Filter {
         locale = setLocale(httpRequest, localeParameter);
         httpRequest.getSession().setAttribute(LOCALE, locale);
         httpRequest.getSession().setAttribute(BUNDLE, defaultBundle);
-        LOG.info("set locale in Filter" + locale);
+        LOG.info("set locale in Filter: " + locale);
         chain.doFilter(request, response);
     }
 

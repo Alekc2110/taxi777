@@ -11,6 +11,7 @@ public interface Path {
     String PAGE_REGISTER_CLIENT = "/jsp/common/registerUser.jsp";
     String PAGE_FORBIDDEN_403 = "/WEB-INF/jsp/error/403.jsp";
     String PAGE_TAXI_ORDER = "/WEB-INF/jsp/client/order.jsp";
+    String ORDER_STATUS = "/WEB-INF/jsp/client/orderStatus.jsp";
 
 
    //commands

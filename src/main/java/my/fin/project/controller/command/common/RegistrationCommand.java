@@ -6,7 +6,7 @@ import my.fin.project.exceptions.PhoneNumExistException;
 import my.fin.project.model.entity.User;
 import my.fin.project.model.entity.enums.Role;
 import my.fin.project.model.service.UserService;
-import my.fin.project.utils.ValidationService;
+import my.fin.project.model.service.ValidationService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

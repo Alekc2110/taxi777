@@ -15,6 +15,7 @@ public class ErrorForbiddenCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info("return 403 page");
+        response.setStatus(403);
         return Path.PAGE_FORBIDDEN_403;
     }
 }

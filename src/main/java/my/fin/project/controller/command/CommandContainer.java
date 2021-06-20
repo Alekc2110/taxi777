@@ -32,7 +32,7 @@ public class CommandContainer {
         commands.put(ADMIN_ACCOUNT, new AdminAccountCommand());
         commands.put(DRIVER_ACCOUNT, new DriverAccountCommand());
         commands.put(FORBIDDEN, new ErrorForbiddenCommand());
-        commands.put(ENTER_ORDER, new EnterOrderCommand());
+        commands.put(ENTER_ORDER, new EnterOrderCommand(new CarService(),new OrderService(), new UserService()));
         commands.put(SHOW_CLIENT_ORDER, new ShowOrderClientCommand());
 //        commands.put(NO_COMMAND, new NoCommand());
     }

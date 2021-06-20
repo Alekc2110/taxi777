@@ -53,22 +53,6 @@ public class ConnectionPoolHolder {
             }
         }
         return dataSource;
-
-//
-//        if (dataSource == null) {
-//            synchronized (ConnectionPoolHolder.class) {
-//                if (dataSource == null) {
-//                    Properties properties = new Properties();
-//                    try (InputStream inputStream = new FileInputStream("datasource.properties")) {
-//                        properties.load(inputStream);
-//                        dataSource = getBasicDataSource(properties);
-//                    } catch (IOException | ClassNotFoundException e) {
-//                        LOG.error("exception in getDataSource: " + e);
-//                    }
-//                }
-//            }
-//        }
-//        return dataSource;
     }
 
     private static BasicDataSource getBasicDataSource(Properties properties) throws ClassNotFoundException {

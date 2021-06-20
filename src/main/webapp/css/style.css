@@ -104,7 +104,7 @@ input[type=email]:focus{
 }
 
 
-.selectAdress{
+.selectAddress{
     width: 100%;
     padding: 15px;
     margin: 5px 0 22px 0;
@@ -256,7 +256,7 @@ a {
     text-transform: uppercase;
     color: #472d00;
     margin: auto;
-    background-color: #0e0bfe;
+    background-color: #4dfe0c;
     border-radius:10px;
 }
 
@@ -269,10 +269,13 @@ a {
 }
 
 
-.car{
-  background-image:url(../img/car-standard.jpg);
+.car_std{
+     background-image:url(../img/car-standard.jpg);
+ }
+.car_comf{
+    background-image:url(../img/car-comfort.png);
 }
-.truck{
+.van{
   background-image:url(../img/car-van.png);
 }
 .wagon{background-image:url(../img/car-universal.jpg);}

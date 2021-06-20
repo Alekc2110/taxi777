@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" metadata-complete="false" xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
     <display-name>Archetype Created Web Application</display-name>
@@ -26,6 +25,20 @@
         <listener-class>my.fin.project.controller.listener.ContextListener</listener-class>
     </listener>
 
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>my.fin.project.controller.filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <servlet-name>Servlet</servlet-name>
+    </filter-mapping>
 
   <filter>
     <filter-name>LocalizationFilter</filter-name>
@@ -45,20 +58,6 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-    <filter>
-        <filter-name>EncodingFilter</filter-name>
-        <filter-class>my.fin.project.controller.filter.EncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>EncodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <servlet-name>Servlet</servlet-name>
-    </filter-mapping>
 
     <filter>
         <filter-name>AuthenticationFilter</filter-name>

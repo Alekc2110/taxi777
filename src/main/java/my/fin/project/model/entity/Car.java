@@ -1,6 +1,9 @@
 package my.fin.project.model.entity;
 
 import my.fin.project.model.entity.enums.CarStatus;
+import my.fin.project.model.entity.enums.CarType;
+
+import java.util.Objects;
 
 
 public class Car extends Entity {
@@ -8,7 +11,7 @@ public class Car extends Entity {
     private String carNumber;
     private String model;
     private String color;
-    private String carType;
+    private CarType carType;
     private CarStatus status;
     private int seats;
 
@@ -27,7 +30,7 @@ public class Car extends Entity {
         return color;
     }
 
-    public String getCarType() {
+    public CarType getCarType() {
         return carType;
     }
 
@@ -39,11 +42,35 @@ public class Car extends Entity {
         return seats;
     }
 
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setCarType(CarType carType) {
+        this.carType = carType;
+    }
+
+    public void setStatus(CarStatus status) {
+        this.status = status;
+    }
+
+    public void setSeats(int seats) {
+        this.seats = seats;
+    }
+
     public static class Builder {
         private String carNumber;
         private String model;
         private String color;
-        private String carType;
+        private CarType carType;
         private CarStatus status;
         private int seats;
 
@@ -65,7 +92,7 @@ public class Car extends Entity {
             return this;
         }
 
-        public Car.Builder setCarType(String carType) {
+        public Car.Builder setCarType(CarType carType) {
             this.carType = carType;
 
             return this;
@@ -104,5 +131,23 @@ public class Car extends Entity {
                 ", status=" + status +
                 ", seats=" + seats +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return seats == car.seats &&
+                Objects.equals(carNumber, car.carNumber) &&
+                Objects.equals(model, car.model) &&
+                Objects.equals(color, car.color) &&
+                Objects.equals(carType, car.carType) &&
+                status == car.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(carNumber, model, color, carType, status, seats);
     }
 }

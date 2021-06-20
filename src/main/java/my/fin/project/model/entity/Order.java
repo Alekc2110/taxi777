@@ -2,35 +2,37 @@ package my.fin.project.model.entity;
 
 import my.fin.project.model.entity.enums.OrderStatus;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class Order extends Entity {
 
     private OrderStatus orderStatus;
     private User client;
     private User driver;
-    private Address destAddress;
-    private Address arriveAddress;
-    private int cost;
-    private int costWithDiscount;
+    private String deptAddress;
+    private String arriveAddress;
+    private BigDecimal cost;
     private Car car;
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
+    private String distance;
 
     public Order() {
     }
 
     public Order(OrderStatus orderStatus, User client, User driver,
-                 Address destAddress, Address arriveAddress, int cost,
-                 int costWithDiscount, Car car, LocalDate creationDate) {
+                 String deptAddress, String arriveAddress, BigDecimal cost,
+                 Car car, LocalDateTime creationDate,
+                 String distance) {
         this.orderStatus = orderStatus;
         this.client = client;
         this.driver = driver;
-        this.destAddress = destAddress;
+        this.deptAddress = deptAddress;
         this.arriveAddress = arriveAddress;
         this.cost = cost;
-        this.costWithDiscount = costWithDiscount;
         this.car = car;
         this.creationDate = creationDate;
+        this.distance = distance;
     }
 
     public OrderStatus getOrderStatus() {
@@ -45,124 +47,116 @@ public class Order extends Entity {
         return driver;
     }
 
-    public Address getDestAddress() {
-        return destAddress;
+    public String getDeptAddress() {
+        return deptAddress;
     }
 
-    public Address getArriveAddress() {
+    public String getArriveAddress() {
         return arriveAddress;
     }
 
-    public int getCost() {
+    public BigDecimal getCost() {
         return cost;
-    }
-
-    public int getCostWithDiscount() {
-        return costWithDiscount;
     }
 
     public Car getCar() {
         return car;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
+
+    public String getDistance() {
+        return distance;
+    }
+
 
     public static class Builder {
 
         private OrderStatus orderStatus;
         private User client;
         private User driver;
-        private Address destAddress;
-        private Address arriveAddress;
-        private int cost;
-        private int costWithDiscount;
+        private String destAddress;
+        private String arriveAddress;
+        private BigDecimal cost;
         private Car car;
-        private LocalDate creationDate;
+        private LocalDateTime creationDate;
+        private String distance;
 
         public Order.Builder setOrderStatus(OrderStatus orderStatus) {
             this.orderStatus = orderStatus;
 
             return this;
         }
-
         public Order.Builder setClient(User client) {
             this.client = client;
 
             return this;
         }
-
-        public Order.Builder setOrder(User driver) {
+        public Order.Builder setDriver(User driver) {
             this.driver = driver;
 
             return this;
         }
-
-        public Order.Builder setDestAddress(Address destAddress) {
+        public Order.Builder setDestAddress(String destAddress) {
             this.destAddress = destAddress;
 
             return this;
         }
-
-        public Order.Builder setArriveAddress(Address arriveAddress) {
+        public Order.Builder setArriveAddress(String arriveAddress) {
             this.arriveAddress = arriveAddress;
 
             return this;
         }
-
-        public Order.Builder setCost(int cost) {
+        public Order.Builder setCost(BigDecimal cost) {
             this.cost = cost;
 
             return this;
         }
-
-        public Order.Builder setCostWithDiscount(int costWithDiscount) {
-            this.costWithDiscount = costWithDiscount;
-
-            return this;
-        }
-
         public Order.Builder setCar(Car car) {
             this.car = car;
 
             return this;
         }
-        public Order.Builder setCrDate(LocalDate creationDate) {
+        public Order.Builder setCrDate(LocalDateTime creationDate) {
             this.creationDate = creationDate;
 
             return this;
         }
+        public Order.Builder setDistance(String distance) {
+            this.distance = distance;
 
+            return this;
+        }
         public Order build() {
             Order order = new Order();
             order.orderStatus = this.orderStatus;
             order.client = this.client;
             order.driver = this.driver;
-            order.destAddress = this.destAddress;
+            order.deptAddress = this.destAddress;
             order.arriveAddress = this.arriveAddress;
             order.cost = this.cost;
-            order.costWithDiscount = this.costWithDiscount;
             order.car = this.car;
             order.creationDate = this.creationDate;
+            order.distance = this.distance;
 
             return order;
         }
 
     }
-
     @Override
     public String toString() {
         return "Order{" +
                 "orderStatus=" + orderStatus +
                 ", client=" + client +
                 ", driver=" + driver +
-                ", destAddress=" + destAddress +
+                ", destAddress=" + deptAddress +
                 ", arriveAddress=" + arriveAddress +
                 ", cost=" + cost +
-                ", costWithDiscount=" + costWithDiscount +
                 ", car=" + car +
                 ", creationDate=" + creationDate +
+                ", distance='" + distance + '\'' +
                 '}';
     }
 }
