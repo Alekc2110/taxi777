@@ -31,6 +31,8 @@ public class SecurityConfig {
 
         List<String> urlAdminPatterns = new ArrayList<>();
         urlAdminPatterns.add(Path.SHOW_ALL_ORDERS_PAG);
+        urlAdminPatterns.add(Path.MAKE_ORDER);
+        urlAdminPatterns.add(Path.ENTER_ORDER);
         urlAdminPatterns.add(Path.ADMIN_ACCOUNT);
         urlAdminPatterns.add(Path.LOGOUT);
         mapConfig.put(Role.ADMIN, urlAdminPatterns);

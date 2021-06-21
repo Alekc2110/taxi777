@@ -31,7 +31,7 @@
                     <strong><p class="order-text-about"><fmt:message key="taxi.show.order.dear"/> <c:out value="${sessionScope.loginedUser.username}"/>
                        <fmt:message key="taxi.show.order.your.order"/>.</p></strong>
                     <p class="order-text-about"> <fmt:message key="taxi.show.order.driver"/> <c:out value="${requestScope.driverName}"/>.
-                        <fmt:message key="taxi.show.order.driver.phone.number"/> : <c:out value="${requestScope.phoneNumber}"/>.</p>
+                        <fmt:message key="taxi.show.order.driver.phone.number"/> : +<c:out value="${requestScope.phoneNumber}"/>.</p>
                     <p class="order-text-about"><fmt:message key="taxi.show.order.thanks"/></p>
                     <p class="order-text-about"><fmt:message key="taxi.show.order.car.info"/> <c:out value="${requestScope.carModel}"/>
                                                                                               <c:out value="${requestScope.carNumber}"/>

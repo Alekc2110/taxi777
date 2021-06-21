@@ -1,7 +1,6 @@
 package my.fin.project.utils;
 
 import my.fin.project.exceptions.MyCookiesUnsupportEncodingException;
-import my.fin.project.model.db.ConnectionPoolHolder;
 import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.User;
 import org.apache.log4j.Logger;

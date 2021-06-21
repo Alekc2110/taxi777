@@ -65,20 +65,20 @@
                                 <div class="cc-selector">
                                     <div class="radbox">
                                         <input id="car_std" type="radio" name="carType" value="STANDARD" checked="checked"/>
-                                        <label class="drinkcard-cc car_std" for="car_std"></label>
+                                        <label class="drinkcard-cc car_std" for="car_std" title="STANDARD"></label>
                                     </div>
                                     <div class="radbox">
                                         <input id="car_comf" type="radio" name="carType" value="COMFORT" checked="checked"/>
-                                        <label class="drinkcard-cc car_comf" for="car_comf"></label>
+                                        <label class="drinkcard-cc car_comf" for="car_comf" title="COMFORT"></label>
                                     </div>
                                     <div class="radbox">
                                         <input id="wagon" type="radio" name="carType" value="UNIVERSAL" checked="checked"/>
-                                        <label class="drinkcard-cc wagon" for="wagon"></label>
+                                        <label class="drinkcard-cc wagon" for="wagon" title="UNIVERSAL"></label>
                                     </div>
 
                                     <div class="radbox">
                                         <input id="van" type="radio" name="carType" value="MINIVAN" checked="checked"/>
-                                        <label class="drinkcard-cc van" for="van"></label>
+                                        <label class="drinkcard-cc van" for="van" title="MINIVAN"></label>
                                     </div>
                                 </div>
                             </div>
@@ -87,9 +87,7 @@
                         <div style="clear: both;"></div>
                     </div>
                 </div>
-
             </div>
-
             <div class="order">
                 <div style="height: 10px"></div>
 

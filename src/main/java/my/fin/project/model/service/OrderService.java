@@ -8,7 +8,6 @@ import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.Discount;
 import my.fin.project.model.entity.Order;
 import my.fin.project.model.entity.User;
-import my.fin.project.model.entity.enums.CarStatus;
 import my.fin.project.model.entity.enums.CarType;
 import my.fin.project.model.entity.enums.OrderStatus;
 import my.fin.project.model.entity.pojo.DistancePojo;
@@ -19,8 +18,8 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Properties;
 
 public class OrderService {
@@ -31,8 +30,9 @@ public class OrderService {
     private static final String MODE = "mode";
     private static final String KEY = "key";
     private static final String CITY = "city";
+    private static final String ENCODING = "UTF-8";
 
-   public Optional<DistancePojo> getDistanceFromGoogleService(String departAddress, String arrAddress) {
+   public DistancePojo getDistanceFromGoogleService(String departAddress, String arrAddress) {
         departAddress = departAddress.replaceAll(" ", "");
         arrAddress = arrAddress.replaceAll(" ", "");
         HttpURLConnection conn;
@@ -56,7 +56,9 @@ public class OrderService {
             String propMode = prop.getProperty(MODE);
             String propKey = prop.getProperty(KEY);
             String propCity = prop.getProperty(CITY);
-            URL url = new URL(propUrl + "origins=" + departAddress+ propCity + "&destinations=" + arrAddress + propCity + "&mode=" + propMode + "&key=" + propKey);
+            departAddress = URLEncoder.encode(departAddress, ENCODING);
+            arrAddress = URLEncoder.encode(arrAddress, ENCODING);
+            URL url = new URL(propUrl + "origins=" + departAddress + propCity + "&destinations=" + arrAddress + propCity + "&mode=" + propMode + "&key=" + propKey);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             BufferedReader reader = new BufferedReader(
@@ -70,7 +72,7 @@ public class OrderService {
         }
 
 
-        return Optional.of(new Gson().fromJson(outputString.toString(), DistancePojo.class));
+        return new Gson().fromJson(outputString.toString(), DistancePojo.class);
     }
 
     public BigDecimal calculateOrderPrice(Integer distance, CarType carType, User client) {

@@ -8,15 +8,33 @@
 
 <div class="header_white clearfix">
     <div class="center">
-        <a href="${pageContext.request.contextPath}/taxi/homePage" id="logo" title="taxi-777">
+        <a href="${pageContext.request.contextPath}/taxi/homePage" id="logo" title="HOME_PAGE">
             <img src="${pageContext.request.contextPath}/img/taxi_logo.jpg" width="80px" height="80px">
         </a>
         <div style="float: right; width: 420px">
             <div class="signClient">
-<%--                <a href="${pageContext.request.contextPath}/taxi/clientAccount"> add if verification if role USER, ADMIN, DRIVER--%>
-                    <p style="float: left; padding-top: 10px; color: #009EDF"><c:out
-                            value="${sessionScope.loginedUser.username}"/></p>
-<%--                </a>--%>
+                   <c:if test="${sessionScope.loginedUser.role.name().equals('CLIENT')}">
+                       <p style="float: left; padding-top: 10px; color: #009EDF">
+                           <a href="${pageContext.request.contextPath}/taxi/clientAccount">
+                               <c:out value="${sessionScope.loginedUser.username}"/>
+                           </a>
+                       </p>
+                   </c:if>
+                   <c:if test="${sessionScope.loginedUser.role.name().equals('ADMIN')}">
+                       <p style="float: left; padding-top: 10px; color: #009EDF">
+                           <a href="${pageContext.request.contextPath}/taxi/adminAccount">
+                               <c:out value="${sessionScope.loginedUser.username}"/>
+                           </a>
+                       </p>
+                   </c:if>
+                   <c:if test="${sessionScope.loginedUser.role.name().equals('DRIVER')}">
+                       <p style="float: left; padding-top: 10px; color: #009EDF">
+                           <a href="${pageContext.request.contextPath}/taxi/driverAccount">
+                               <c:out value="${sessionScope.loginedUser.username}"/>
+                           </a>
+                       </p>
+                   </c:if>
+
                 <a href="${pageContext.request.contextPath}/taxi/login">
                     <div style="margin: auto; float: right; height: 36px;">
                         <img src="${pageContext.request.contextPath}/img/enter-icon.jpg" style="height: 56px">

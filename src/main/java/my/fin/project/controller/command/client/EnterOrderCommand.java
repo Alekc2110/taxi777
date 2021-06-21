@@ -56,10 +56,9 @@ public class EnterOrderCommand extends Command {
 
         if (isNotSameAddress(addressDeparture, addressArrive)) {
             User loginedClient = LoginUserUtils.getLoginedUser(request.getSession());
-            Optional<DistancePojo> distancePojo = orderService.getDistanceFromGoogleService(addressDeparture, addressArrive);
+            DistancePojo distancePojo = orderService.getDistanceFromGoogleService(addressDeparture, addressArrive);
 
-
-            if (distancePojo.isPresent()) {
+            if (distancePojo.getDestination_addresses().length > 0 && distancePojo.getOrigin_addresses().length > 0) {
                 Map<String, String> distanceValues = getDistanceValues(distancePojo);
                 LOG.info("distanceValues map: " + distanceValues);
 
@@ -67,45 +66,47 @@ public class EnterOrderCommand extends Command {
                 LOG.info(String.format("returned list cars: %s of CarType %s: ", carList, carType));
                 if (!carList.isEmpty()) {
                     String contextAndServletPath = request.getContextPath() + request.getServletPath();
-                    AtomicReference<Boolean> isOrderCreated = new AtomicReference<>();
 
                     Optional<Car> availCar = carList.stream().filter(car -> car.getStatus().equals(CarStatus.FREE)).findFirst();
-                    availCar.ifPresent(car -> {
-                        LOG.info(String.format("make order with free car: %s: ", car));
-                        User driver = userService.getDriver(car.getId());
-                        BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), car.getCarType(), loginedClient);
+                    if (availCar.isPresent()) {
+                        boolean confirmed = false;
+                        Car orderCar = availCar.get();
+                        LOG.info(String.format("make order with free car: %s: ", orderCar));
+                        User driver = userService.getDriver(orderCar.getId());
+                        BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), orderCar.getCarType(), loginedClient);
                         LOG.info("orderPrice calculated: " + orderPrice.toString());
                         if (userService.updateTotalSumRides(loginedClient, orderPrice)) {
-                            isOrderCreated.set(confirmOrder(loginedClient, driver, distanceValues, orderPrice, car));
+                            confirmed = confirmOrder(loginedClient, driver, distanceValues, orderPrice, orderCar);
                             int timeWaiting = orderService.getTimeWaiting();
-                            CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, car);
+                            CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, orderCar);
                         }
-
-                    });
-                    if (isOrderCreated.get())
-                        return REDIRECT + contextAndServletPath + SHOW_CLIENT_ORDER;
-
-                    Optional<Car> bookedCar = carList.stream().filter(car -> car.getStatus().equals(CarStatus.BOOKED)).findFirst();
-                    if (bookedCar.isPresent()) {
-                        int reqSeats = bookedCar.get().getSeats();
-                        Optional<Car> altCar = carService.getFreeCarsByNumSeats(reqSeats).stream().findAny();
-                        altCar.ifPresent(car -> {
-                            LOG.info("make order with alternate car CarType : " + car.getCarType().toString());
-                            User driver = userService.getDriver(car.getId());
-                            BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), car.getCarType(), loginedClient);
-                            LOG.info("orderPrice calculated: " + orderPrice.toString());
-                            if (userService.updateTotalSumRides(loginedClient, orderPrice)) {
-                                isOrderCreated.set(confirmOrder(loginedClient, driver, distanceValues, orderPrice, car));
-                                int timeWaiting = orderService.getTimeWaiting();
-                                CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, car);
+                        if (confirmed)
+                            return REDIRECT + contextAndServletPath + SHOW_CLIENT_ORDER;
+                    } else {
+                        Optional<Car> bookedCar = carList.stream().filter(car -> car.getStatus().equals(CarStatus.BOOKED)).findFirst();
+                        if (bookedCar.isPresent()) {
+                            boolean confirmed = false;
+                            int reqSeats = bookedCar.get().getSeats();
+                            Optional<Car> altCar = carService.getFreeCarsByNumSeats(reqSeats).stream().findAny();
+                            if(altCar.isPresent()){
+                                Car otherCar = altCar.get();
+                                LOG.info("make order with alternate car CarType : " + otherCar.getCarType().toString());
+                                User driver = userService.getDriver(otherCar.getId());
+                                BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), otherCar.getCarType(), loginedClient);
+                                LOG.info("orderPrice calculated: " + orderPrice.toString());
+                                if (userService.updateTotalSumRides(loginedClient, orderPrice)) {
+                                    confirmed = confirmOrder(loginedClient, driver, distanceValues, orderPrice, otherCar);
+                                    int timeWaiting = orderService.getTimeWaiting();
+                                    CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, otherCar);
+                                }
+                                if (confirmed)
+                                    return REDIRECT + contextAndServletPath + SHOW_CLIENT_ORDER;
                             }
-                        });
+                        }
                     }
-                    if (isOrderCreated.get())
-                        return REDIRECT + contextAndServletPath + SHOW_CLIENT_ORDER;
                 }
             } else {
-                LOG.info("no found such address");
+                LOG.info("not found such address");
                 return PAGE_TAXI_ORDER + NO_SUCH_ADDRESS;
             }
         } else {
@@ -116,15 +117,23 @@ public class EnterOrderCommand extends Command {
         return PAGE_TAXI_ORDER + NO_AVAIL_CAR;
     }
 
-    //check if address is not same
+    /**
+     *  checks if the same address input     *
+     * @param addressDeparture
+     * @param addressArrive
+     */
     private boolean isNotSameAddress(String addressDeparture, String addressArrive) {
         return !addressArrive.equals(addressDeparture);
     }
 
-    private Map<String, String> getDistanceValues(Optional<DistancePojo> distancePojo) {
+    /**
+     * converts DistancePojo object to Map
+     * @param distance
+     *
+     */
+    private Map<String, String> getDistanceValues(DistancePojo distance) {
         Map<String, String> values = new HashMap<>();
         StringBuilder distanceValue = new StringBuilder();
-        DistancePojo distance = distancePojo.get();
         String destinationAddress = distance.getDestination_addresses()[0];
         String originAddress = distance.getOrigin_addresses()[0];
         LOG.info("distancePojo object: " + distance.toString());
@@ -140,6 +149,15 @@ public class EnterOrderCommand extends Command {
         return values;
     }
 
+    /**
+     * creates and save order, changes ordered car Status
+     * @param loginedClient
+     * @param driver
+     * @param distanceValues
+     * @param orderPrice
+     * @param car
+     *
+     */
     private boolean confirmOrder(User loginedClient, User driver, Map<String, String> distanceValues, BigDecimal orderPrice, Car car) {
         Long orderId = orderService.createOrder(loginedClient, driver, distanceValues.get("originAddress"),
                 distanceValues.get("destinationAddress"), orderPrice, distanceValues.get("distanceValue"), car);
