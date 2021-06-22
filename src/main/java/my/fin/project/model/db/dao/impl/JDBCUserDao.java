@@ -88,16 +88,6 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public Role checkUserRole(User user) {
-        return null;
-    }
-
-    @Override
     public boolean saveUserRole(Long id, Role userRole) {
         try (PreparedStatement ps = connection.prepareStatement(SAVE_USER_ROLE)) {
             ps.setString(1, String.valueOf(userRole));
@@ -243,17 +233,11 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {
-        return null;
+    public List<User> findAll() {return null;
     }
 
     @Override
     public boolean update(User user) {
-        return false;
-    }
-
-    @Override
-    public boolean delete(Long id) {
         return false;
     }
 

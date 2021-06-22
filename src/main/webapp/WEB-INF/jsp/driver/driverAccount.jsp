@@ -14,7 +14,7 @@
     <header id="header">
         <jsp:include page="/WEB-INF/jspf/parts/header.jsp"/>
 
-        <div class="header_blue">
+        <div class="header_green">
             <jsp:include page="/WEB-INF/jspf/parts/navi_block.jsp"/>
         </div>
 
@@ -31,7 +31,7 @@
                         <form class="dr" action="${pageContext.request.contextPath}/taxi/logOut">
                             <button type="submit" class="account-driver-btns"><fmt:message key="driver.account.logout"/></button>
                         </form>
-                        <a href="${pageContext.request.contextPath}/taxi/showAllOrders?pagination=1">
+                        <a href="${pageContext.request.contextPath}/taxi/showDriverOrders?pagination=1">
                             <button class="account-driver-btns"><fmt:message key="driver.account.show.pag"/></button>
                         </a>
                     </div>

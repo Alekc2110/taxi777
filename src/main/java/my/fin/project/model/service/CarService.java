@@ -37,4 +37,11 @@ public class CarService {
 
         }
     }
+
+    public Car getCarById(Long carId) {
+        try (CarDao dao = factory.createCarDao()) {
+            LOG.debug("find car by carId: " + carId);
+            return dao.getById(carId);
+        }
+    }
 }

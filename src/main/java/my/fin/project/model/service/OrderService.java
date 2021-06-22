@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import my.fin.project.model.db.DaoFactory;
 import my.fin.project.model.db.dao.interfaces.OrderDao;
 import my.fin.project.model.db.dao.interfaces.UserDao;
-import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.Discount;
 import my.fin.project.model.entity.Order;
 import my.fin.project.model.entity.User;
@@ -20,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Properties;
 
 public class OrderService {
@@ -32,7 +32,7 @@ public class OrderService {
     private static final String CITY = "city";
     private static final String ENCODING = "UTF-8";
 
-   public DistancePojo getDistanceFromGoogleService(String departAddress, String arrAddress) {
+    public DistancePojo getDistanceFromGoogleService(String departAddress, String arrAddress) {
         departAddress = departAddress.replaceAll(" ", "");
         arrAddress = arrAddress.replaceAll(" ", "");
         HttpURLConnection conn;
@@ -78,32 +78,59 @@ public class OrderService {
     public BigDecimal calculateOrderPrice(Integer distance, CarType carType, User client) {
         try (UserDao dao = factory.createUserDao()) {
             Discount userDiscount = dao.getUserDiscount(client.getId());
-            if (userDiscount.getId() != -1){
+            if (userDiscount.getId() != -1) {
                 return PriceUtils.getOrderPriceDisc(distance, carType, userDiscount.getDiscountRate());
             }
             return PriceUtils.getOrderPrice(distance, carType);
         }
     }
 
-    public Long createOrder(User loginedClient, User driver, String departure_address, String destination_address, BigDecimal orderPrice, String distance, Car car) {
-       Order order = new Order.Builder()
-               .setOrderStatus(OrderStatus.CONFIRMED)
-               .setClient(loginedClient)
-               .setDriver(driver)
-               .setDestAddress(destination_address)
-               .setArriveAddress(departure_address)
-               .setCar(car)
-               .setCost(orderPrice)
-               .setCrDate(LocalDateTime.now())
-               .setDistance(distance)
-               .build();
+    public Long createOrder(Long clientId, Long driverId, String originAddress, String destAddress, BigDecimal orderPrice, String distance, Long carId) {
+        Order order = new Order.Builder()
+                .setOrderStatus(OrderStatus.CONFIRMED)
+                .setClientId(clientId)
+                .setDriverId(driverId)
+                .setOriginAddress(originAddress)
+                .setArriveAddress(destAddress)
+                .setCarId(carId)
+                .setCost(orderPrice)
+                .setCrDate(LocalDateTime.now())
+                .setDistance(distance)
+                .build();
         try (OrderDao dao = factory.createOrderDao()) {
             return dao.save(order);
         }
     }
 
-    public int getTimeWaiting(){
-      return (int) (Math.random() * 10);
+    public int getAllOrdersCountByDriver(Long driverId) {
+        try (OrderDao dao = factory.createOrderDao()) {
+            return dao.getCountOrders(driverId);
+        }
+    }
+
+    public int getAllOrdersCount(){
+        try (OrderDao dao = factory.createOrderDao()) {
+            return dao.getCountAllOrders();
+        }
+    }
+
+    public List<Order> getAllOrdersByDriverId(Long driverId, int row, int limit) {
+        try (OrderDao dao = factory.createOrderDao()) {
+            return dao.getAllOrdersByDriverId(driverId, row, limit);
+        }
+
+    }
+
+    public List<Order> getAllOrders(int row, int limit) {
+        try (OrderDao dao = factory.createOrderDao()) {
+            return dao.getAllOrders(row, limit);
+        }
+
+    }
+
+
+    public int getTimeWaiting() {
+        return (int) (Math.random() * 10);
     }
 
 

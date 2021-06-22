@@ -10,9 +10,9 @@
         <div id="navmobile-btn"><fmt:message key="label.header.menu"/></div>
         <ul id="menu-main-menu" class="main_menu ">
             <li id="menu-item-45" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-45">
-                <a href="#"><fmt:message key="label.header.menu.tariff"/></a></li>
+                <a href="${pageContext.request.contextPath}/jsp/common/tariff.jsp"><fmt:message key="label.header.menu.tariff"/></a></li>
             <li id="menu-item-44" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-44"><a
-                    href="#"><fmt:message key="label.header.menu.about.us"/></a></li>
+                    href="${pageContext.request.contextPath}/jsp/common/taxiInfo.jsp"><fmt:message key="label.header.menu.about.us"/></a></li>
             <li id="menu-item-431" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-431"><a
                     href="${pageContext.request.contextPath}/taxi/makeOrder">
                 <fmt:message key="label.header.menu.for.make.order"/></a></li>

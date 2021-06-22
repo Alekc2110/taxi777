@@ -1,6 +1,7 @@
-package my.fin.project.controller.command.client;
+package my.fin.project.controller.command.common;
 
 import my.fin.project.controller.command.Command;
+import my.fin.project.model.db.dao.constants.Fields;
 import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.User;
 import my.fin.project.model.entity.enums.CarStatus;
@@ -19,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import static my.fin.project.controller.command.Path.*;
@@ -32,6 +32,7 @@ public class EnterOrderCommand extends Command {
     private static final String NO_AVAIL_CAR = "?noAvailableCar=true";
     private static final String NO_SUCH_ADDRESS = "?notFoundAddress=true";
     private static final String SAME_ADDRESS = "?sameAddress=true";
+    private static final String ALT_CAR_PROP = "?otherCarPropose=true";
     private CarService carService;
     private OrderService orderService;
     private UserService userService;
@@ -45,9 +46,9 @@ public class EnterOrderCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String addressDeparture = request.getParameter(ADDRESS_DEPARTURE_PARAMETER);
-        String addressArrive = request.getParameter(ADDRESS_ARRIVE_PARAMETER);
-        final String carType = request.getParameter(CAR_TYPE_PARAMETER);
+       final String addressDeparture = request.getParameter(ADDRESS_DEPARTURE_PARAMETER);
+       final String addressArrive = request.getParameter(ADDRESS_ARRIVE_PARAMETER);
+       final String carType = request.getParameter(CAR_TYPE_PARAMETER);
 
         LOG.info(addressDeparture + "!!!!!");
         LOG.info(addressArrive + "!!!!!");
@@ -61,46 +62,36 @@ public class EnterOrderCommand extends Command {
             if (distancePojo.getDestination_addresses().length > 0 && distancePojo.getOrigin_addresses().length > 0) {
                 Map<String, String> distanceValues = getDistanceValues(distancePojo);
                 LOG.info("distanceValues map: " + distanceValues);
-
                 List<Car> carList = carService.getCars(carType);
                 LOG.info(String.format("returned list cars: %s of CarType %s: ", carList, carType));
                 if (!carList.isEmpty()) {
-                    String contextAndServletPath = request.getContextPath() + request.getServletPath();
-
-                    Optional<Car> availCar = carList.stream().filter(car -> car.getStatus().equals(CarStatus.FREE)).findFirst();
-                    if (availCar.isPresent()) {
-                        boolean confirmed = false;
-                        Car orderCar = availCar.get();
+                    Optional<Car> availCarOpt = carList.stream().filter(car -> car.getStatus().equals(CarStatus.FREE)).findFirst();
+                    if (availCarOpt.isPresent()) {
+                        Car orderCar = availCarOpt.get();
                         LOG.info(String.format("make order with free car: %s: ", orderCar));
                         User driver = userService.getDriver(orderCar.getId());
                         BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), orderCar.getCarType(), loginedClient);
                         LOG.info("orderPrice calculated: " + orderPrice.toString());
-                        if (userService.updateTotalSumRides(loginedClient, orderPrice)) {
-                            confirmed = confirmOrder(loginedClient, driver, distanceValues, orderPrice, orderCar);
-                            int timeWaiting = orderService.getTimeWaiting();
-                            CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, orderCar);
-                        }
-                        if (confirmed)
-                            return REDIRECT + contextAndServletPath + SHOW_CLIENT_ORDER;
+                        int timeWaiting = orderService.getTimeWaiting();
+                        CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, orderCar, distanceValues);
+                        addAttributes(request,driver, orderCar, distanceValues, orderPrice, timeWaiting);
+                        LOG.info("return order confirm page");
+                        return PAGE_ORDER_CONFIRM;
                     } else {
                         Optional<Car> bookedCar = carList.stream().filter(car -> car.getStatus().equals(CarStatus.BOOKED)).findFirst();
                         if (bookedCar.isPresent()) {
-                            boolean confirmed = false;
                             int reqSeats = bookedCar.get().getSeats();
-                            Optional<Car> altCar = carService.getFreeCarsByNumSeats(reqSeats).stream().findAny();
-                            if(altCar.isPresent()){
-                                Car otherCar = altCar.get();
+                            Optional<Car> optionalCar = carService.getFreeCarsByNumSeats(reqSeats).stream().findAny();
+                            if (optionalCar.isPresent()) {
+                                Car otherCar = optionalCar.get();
                                 LOG.info("make order with alternate car CarType : " + otherCar.getCarType().toString());
                                 User driver = userService.getDriver(otherCar.getId());
                                 BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), otherCar.getCarType(), loginedClient);
                                 LOG.info("orderPrice calculated: " + orderPrice.toString());
-                                if (userService.updateTotalSumRides(loginedClient, orderPrice)) {
-                                    confirmed = confirmOrder(loginedClient, driver, distanceValues, orderPrice, otherCar);
-                                    int timeWaiting = orderService.getTimeWaiting();
-                                    CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, otherCar);
-                                }
-                                if (confirmed)
-                                    return REDIRECT + contextAndServletPath + SHOW_CLIENT_ORDER;
+                                int timeWaiting = orderService.getTimeWaiting();
+                                CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, otherCar, distanceValues);
+                                addAttributes(request,driver, otherCar, distanceValues, orderPrice, timeWaiting);
+                                return PAGE_ORDER_CONFIRM + ALT_CAR_PROP;
                             }
                         }
                     }
@@ -118,7 +109,8 @@ public class EnterOrderCommand extends Command {
     }
 
     /**
-     *  checks if the same address input     *
+     * checks if the same address input
+     *
      * @param addressDeparture
      * @param addressArrive
      */
@@ -128,8 +120,8 @@ public class EnterOrderCommand extends Command {
 
     /**
      * converts DistancePojo object to Map
-     * @param distance
      *
+     * @param distance
      */
     private Map<String, String> getDistanceValues(DistancePojo distance) {
         Map<String, String> values = new HashMap<>();
@@ -149,25 +141,19 @@ public class EnterOrderCommand extends Command {
         return values;
     }
 
-    /**
-     * creates and save order, changes ordered car Status
-     * @param loginedClient
-     * @param driver
-     * @param distanceValues
-     * @param orderPrice
-     * @param car
-     *
-     */
-    private boolean confirmOrder(User loginedClient, User driver, Map<String, String> distanceValues, BigDecimal orderPrice, Car car) {
-        Long orderId = orderService.createOrder(loginedClient, driver, distanceValues.get("originAddress"),
-                distanceValues.get("destinationAddress"), orderPrice, distanceValues.get("distanceValue"), car);
-        if (orderId != -1) {
-            car.setStatus(CarStatus.BOOKED);
-            carService.updateCarStatus(car);
-            LOG.info("order confirmed, orderId: " + orderId);
-            return true;
-        }
-        return false;
+    private void addAttributes(HttpServletRequest request, User driver, Car orderCar, Map<String, String> distanceValues, BigDecimal orderPrice, int timeWaiting){
+        request.setAttribute(Fields.DRIVER_ID, driver.getId());
+        request.setAttribute(Fields.DRIVER_NAME, driver.getUsername());
+        request.setAttribute(Fields.DRIVER_PHONE, driver.getPhoneNumber());
+        request.setAttribute(Fields.CAR_ID, orderCar.getId());
+        request.setAttribute(Fields.CAR_MODEL, orderCar.getModel());
+        request.setAttribute(Fields.CAR_NUMBER, orderCar.getCarNumber());
+        request.setAttribute(Fields.CAR_TYPE, orderCar.getCarType().toString());
+        request.setAttribute(Fields.PRICE, orderPrice.toString());
+        request.setAttribute(Fields.TIME_WAIT, timeWaiting);
+        request.setAttribute(Fields.DIST_VALUE, distanceValues.get("distanceValue"));
+        request.setAttribute(Fields.ORIG_ADDRESS, distanceValues.get("originAddress"));
+        request.setAttribute(Fields.DEST_ADDRESS, distanceValues.get("destinationAddress"));
     }
 
 }

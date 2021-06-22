@@ -8,29 +8,28 @@ import java.time.LocalDateTime;
 public class Order extends Entity {
 
     private OrderStatus orderStatus;
-    private User client;
-    private User driver;
-    private String deptAddress;
+    private Long clientId;
+    private Long driverId;
+    private String originAddress;
     private String arriveAddress;
     private BigDecimal cost;
-    private Car car;
+    private Long carId;
     private LocalDateTime creationDate;
     private String distance;
 
     public Order() {
     }
 
-    public Order(OrderStatus orderStatus, User client, User driver,
-                 String deptAddress, String arriveAddress, BigDecimal cost,
-                 Car car, LocalDateTime creationDate,
-                 String distance) {
+    public Order(OrderStatus orderStatus, Long clientId, Long driverId,
+                 String originAddress, String arriveAddress, BigDecimal cost,
+                 Long carId, LocalDateTime creationDate, String distance) {
         this.orderStatus = orderStatus;
-        this.client = client;
-        this.driver = driver;
-        this.deptAddress = deptAddress;
+        this.clientId = clientId;
+        this.driverId = driverId;
+        this.originAddress = originAddress;
         this.arriveAddress = arriveAddress;
         this.cost = cost;
-        this.car = car;
+        this.carId = carId;
         this.creationDate = creationDate;
         this.distance = distance;
     }
@@ -39,16 +38,16 @@ public class Order extends Entity {
         return orderStatus;
     }
 
-    public User getClient() {
-        return client;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public User getDriver() {
-        return driver;
+    public Long getDriverId() {
+        return driverId;
     }
 
-    public String getDeptAddress() {
-        return deptAddress;
+    public String getOriginAddress() {
+        return originAddress;
     }
 
     public String getArriveAddress() {
@@ -59,8 +58,8 @@ public class Order extends Entity {
         return cost;
     }
 
-    public Car getCar() {
-        return car;
+    public Long getCarId() {
+        return carId;
     }
 
     public LocalDateTime getCreationDate() {
@@ -71,16 +70,15 @@ public class Order extends Entity {
         return distance;
     }
 
-
     public static class Builder {
 
         private OrderStatus orderStatus;
-        private User client;
-        private User driver;
-        private String destAddress;
+        private Long clientId;
+        private Long driverId;
+        private String originAddress;
         private String arriveAddress;
         private BigDecimal cost;
-        private Car car;
+        private Long carId;
         private LocalDateTime creationDate;
         private String distance;
 
@@ -89,18 +87,18 @@ public class Order extends Entity {
 
             return this;
         }
-        public Order.Builder setClient(User client) {
-            this.client = client;
+        public Order.Builder setClientId(Long clientId) {
+            this.clientId = clientId;
 
             return this;
         }
-        public Order.Builder setDriver(User driver) {
-            this.driver = driver;
+        public Order.Builder setDriverId(Long driverId) {
+            this.driverId = driverId;
 
             return this;
         }
-        public Order.Builder setDestAddress(String destAddress) {
-            this.destAddress = destAddress;
+        public Order.Builder setOriginAddress(String originAddress) {
+            this.originAddress = originAddress;
 
             return this;
         }
@@ -114,8 +112,8 @@ public class Order extends Entity {
 
             return this;
         }
-        public Order.Builder setCar(Car car) {
-            this.car = car;
+        public Order.Builder setCarId(Long carId) {
+            this.carId = carId;
 
             return this;
         }
@@ -132,29 +130,29 @@ public class Order extends Entity {
         public Order build() {
             Order order = new Order();
             order.orderStatus = this.orderStatus;
-            order.client = this.client;
-            order.driver = this.driver;
-            order.deptAddress = this.destAddress;
+            order.clientId = this.clientId;
+            order.driverId = this.driverId;
+            order.originAddress = this.originAddress;
             order.arriveAddress = this.arriveAddress;
             order.cost = this.cost;
-            order.car = this.car;
+            order.carId = this.carId;
             order.creationDate = this.creationDate;
             order.distance = this.distance;
 
             return order;
         }
-
     }
+
     @Override
     public String toString() {
         return "Order{" +
                 "orderStatus=" + orderStatus +
-                ", client=" + client +
-                ", driver=" + driver +
-                ", destAddress=" + deptAddress +
-                ", arriveAddress=" + arriveAddress +
+                ", clientId=" + clientId +
+                ", driverId=" + driverId +
+                ", deptAddress='" + originAddress + '\'' +
+                ", arriveAddress='" + arriveAddress + '\'' +
                 ", cost=" + cost +
-                ", car=" + car +
+                ", carId=" + carId +
                 ", creationDate=" + creationDate +
                 ", distance='" + distance + '\'' +
                 '}';

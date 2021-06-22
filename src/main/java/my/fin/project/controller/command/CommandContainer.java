@@ -1,10 +1,12 @@
 package my.fin.project.controller.command;
 
 import my.fin.project.controller.command.admin.AdminAccountCommand;
+import my.fin.project.controller.command.admin.ShowAllOrdersCommand;
 import my.fin.project.controller.command.client.*;
 import my.fin.project.controller.command.common.*;
 import my.fin.project.controller.command.driver.DriverAccountCommand;
 import my.fin.project.controller.command.common.EnterLoginCommand;
+import my.fin.project.controller.command.driver.ShowDriverOrdersCommand;
 import my.fin.project.model.service.*;
 import org.apache.log4j.Logger;
 
@@ -31,10 +33,13 @@ public class CommandContainer {
         commands.put(CLIENT_ACCOUNT, new ClientAccountCommand());
         commands.put(ADMIN_ACCOUNT, new AdminAccountCommand());
         commands.put(DRIVER_ACCOUNT, new DriverAccountCommand());
+        commands.put(SHOW_DRIVER_ORDERS, new ShowDriverOrdersCommand(new OrderService()));
+        commands.put(SHOW_ALL_ORDERS, new ShowAllOrdersCommand(new OrderService()));
         commands.put(FORBIDDEN, new ErrorForbiddenCommand());
         commands.put(ENTER_ORDER, new EnterOrderCommand(new CarService(),new OrderService(), new UserService()));
-        commands.put(SHOW_CLIENT_ORDER, new ShowOrderClientCommand());
-//        commands.put(NO_COMMAND, new NoCommand());
+
+        commands.put(CONFIRM_ORDER, new ConfirmOrderCommand(new OrderService(),new CarService(),new UserService()));
+
     }
 
     public static Command getCommand(String commandName) {

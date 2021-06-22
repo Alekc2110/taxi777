@@ -3,6 +3,7 @@ package my.fin.project.model.db.dao.constants;
 public final class Queries {
     //CarDao
     public static final String GET_ALL_CARS = "SELECT * FROM `car`";
+    public static final String GET_CAR_BY_ID = "SELECT * FROM `car` WHERE car_id = ?";
     public static final String GET_CARS_BY_TYPE = "SELECT * FROM `car` WHERE type = ?";
     public static final String UPDATE_CAR_STATUS = "UPDATE `car` SET status = ? WHERE car_id = ?";
     //UserDao
@@ -18,6 +19,10 @@ public final class Queries {
                                                       "JOIN car_driver cd ON u.id = cd.driver_id WHERE cd.car_id = ?";
     //OrderDao
     public static final String SAVE_ORDER = "INSERT INTO `order`(order_status, client_id, driver_id, depart_address, arr_address, cost, car_id, creation_date, distance)  VALUES (?,?,?,?,?,?,?,?,?)";
+    public static final String COUNT_DRIVER_ORDERS = "SELECT count(*) FROM `order` WHERE driver_id = ?";
+    public static final String COUNT_ALL_ORDERS = "SELECT count(*) FROM `order`";
+    public static final String GET_ORDERS_DRIVER_LIMIT = "SELECT * FROM `order` WHERE driver_id = ? ORDER BY order_id ASC limit ?, ?";
+    public static final String GET_ALL_ORDERS = "SELECT * FROM `order` ORDER BY order_id limit ?, ?";
 
 
 }

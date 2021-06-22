@@ -1,15 +1,18 @@
 package my.fin.project.model.db.dao.impl;
 
 import my.fin.project.model.db.dao.interfaces.OrderDao;
+import my.fin.project.model.db.mapper.Mapper;
+import my.fin.project.model.db.mapper.OrderMapper;
 import my.fin.project.model.entity.Order;
 import my.fin.project.model.entity.enums.OrderStatus;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import static my.fin.project.model.db.dao.constants.Queries.SAVE_ORDER;
+import static my.fin.project.model.db.dao.constants.Queries.*;
 
 
 public class JDBCOrderDao implements OrderDao {
@@ -27,14 +30,15 @@ public class JDBCOrderDao implements OrderDao {
         Long id = null;
         try (PreparedStatement ps = connection.prepareStatement(SAVE_ORDER, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, String.valueOf(order.getOrderStatus()));
-            ps.setLong(2, order.getClient().getId());
-            ps.setLong(3, order.getDriver().getId());
-            ps.setString(4, order.getDeptAddress());
+            ps.setLong(2, order.getClientId());
+            ps.setLong(3, order.getDriverId());
+            ps.setString(4, order.getOriginAddress());
             ps.setString(5, order.getArriveAddress());
             ps.setBigDecimal(6, order.getCost());
-            ps.setLong(7, order.getCar().getId());
+            ps.setLong(7, order.getCarId());
             ps.setTimestamp(8, Timestamp.valueOf(order.getCreationDate()));
             ps.setString(9, order.getDistance());
+            LOG.debug("Executed query: " + SAVE_ORDER);
             if (ps.executeUpdate() != 1) {
                 return -1L;
             }
@@ -57,19 +61,87 @@ public class JDBCOrderDao implements OrderDao {
     }
 
     @Override
-    public List<Order> getAllOrdersByUserId(int userId, int row, int limit) {
-        return null;
+    public int getCountOrders(Long driverId) {
+        int countOrders = 0;
+        try (PreparedStatement ps = connection.prepareStatement(COUNT_DRIVER_ORDERS)) {
+            ps.setLong(1, driverId);
+
+            final ResultSet rs = ps.executeQuery();
+
+            LOG.debug("Executed query: " + COUNT_DRIVER_ORDERS);
+            if (rs.next()) {
+                LOG.debug("check if rs has next");
+                countOrders = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOG.error("SQLException in 'getCountOrders' OrderDao", e);
+        }
+        return countOrders;
     }
 
     @Override
-    public List<Order> getOrderByDate(LocalDate date) {
-        return null;
+    public int getCountAllOrders() {
+        int countOrders = 0;
+        try (Statement st = connection.createStatement()) {
+
+            final ResultSet rs = st.executeQuery(COUNT_ALL_ORDERS);
+
+            LOG.debug("Executed query: " + COUNT_ALL_ORDERS);
+            if (rs.next()) {
+                LOG.debug("check if rs has next");
+                countOrders = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOG.error("SQLException in 'getCountAllOrders' OrderDao", e);
+        }
+        return countOrders;
+    }
+
+
+    @Override
+    public List<Order> getAllOrdersByDriverId(Long driverId, int row, int limit) {
+        List<Order> orders = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(GET_ORDERS_DRIVER_LIMIT)) {
+            ps.setLong(1, driverId);
+            ps.setInt(2, row);
+            ps.setInt(3, limit);
+            final ResultSet rs = ps.executeQuery();
+            LOG.debug("Executed query: " + GET_ORDERS_DRIVER_LIMIT);
+            Mapper<Order> orderMapper = new OrderMapper();
+            while (rs.next()) {
+                LOG.debug("check if rs has next");
+                Order order = orderMapper.getEntity(rs);
+                orders.add(order);
+            }
+
+            return orders;
+        } catch (SQLException e) {
+            LOG.error("SQLException in 'getAllOrdersByDriverId' in JdbcOrderDao", e);
+            return orders;
+        }
     }
 
     @Override
-    public boolean updateOrderStatus(int orderId, OrderStatus orderStatus) {
-        return false;
+    public List<Order> getAllOrders(int row, int limit) {
+        List<Order> orders = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(GET_ALL_ORDERS)) {
+            ps.setInt(1, row);
+            ps.setInt(2, limit);
+            final ResultSet rs = ps.executeQuery();
+            LOG.debug("Executed query: " + GET_ALL_ORDERS);
+            Mapper<Order> orderMapper = new OrderMapper();
+            while (rs.next()) {
+                LOG.debug("check if rs has next");
+                Order order = orderMapper.getEntity(rs);
+                orders.add(order);
+            }
+            return orders;
+        } catch (SQLException e) {
+            LOG.error("SQLException in 'getAllOrders' in JdbcOrderDao", e);
+            return orders;
+        }
     }
+
 
     @Override
     public Order getById(Long id) {
@@ -86,10 +158,6 @@ public class JDBCOrderDao implements OrderDao {
         return false;
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return false;
-    }
     @Override
     public void close() {
         try {

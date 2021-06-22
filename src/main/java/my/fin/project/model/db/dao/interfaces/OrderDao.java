@@ -8,11 +8,12 @@ import java.util.List;
 
 public interface OrderDao extends Dao<Order> {
 
-    List<Order> getAllOrdersByUserId(int userId, int row, int limit);
+    int getCountOrders(Long driverId);
 
-    List<Order> getOrderByDate(LocalDate date);
+    List<Order> getAllOrdersByDriverId(Long driverId, int row, int limit);
 
-    boolean updateOrderStatus(int orderId, OrderStatus orderStatus);
+    List<Order> getAllOrders(int row, int limit);
 
+    int getCountAllOrders();
 
 }

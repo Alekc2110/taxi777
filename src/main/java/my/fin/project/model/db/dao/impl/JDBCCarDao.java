@@ -28,7 +28,7 @@ public class JDBCCarDao implements CarDao {
             ps.setString(1, carType);
             ResultSet rs = ps.executeQuery();
             Mapper<Car> carMapper = new CarMapper();
-            LOG.debug("Executed query" + GET_CARS_BY_TYPE);
+            LOG.debug("Executed query " + GET_CARS_BY_TYPE);
             while (rs.next()) {
                 Car car = carMapper.getEntity(rs);
                 cars.add(car);
@@ -36,7 +36,7 @@ public class JDBCCarDao implements CarDao {
             return cars;
         } catch (SQLException e) {
             LOG.error("SQLException when getCarsByType in JdbcCarDao" , e);
-            return null;
+            return cars;
         }
     }
 
@@ -46,8 +46,23 @@ public class JDBCCarDao implements CarDao {
     }
 
     @Override
-    public Car getById(Long id) {
-        return null;
+    public Car getById(Long carId) {
+        Car car = new Car();
+        try (PreparedStatement ps = connection.prepareStatement(GET_CAR_BY_ID)) {
+            ps.setLong(1, carId);
+            ResultSet rs = ps.executeQuery();
+            Mapper<Car> carMapper = new CarMapper();
+            LOG.debug("Executed query " + GET_CAR_BY_ID);
+            while (rs.next()) {
+                car = carMapper.getEntity(rs);
+            }
+        } catch (SQLException e) {
+            LOG.error("SQLException when getCarById in JdbcCarDao" , e);
+            car = new Car.Builder().build();
+            car.setId(-1L);
+            return car;
+        }
+        return car;
     }
 
     @Override
@@ -56,7 +71,7 @@ public class JDBCCarDao implements CarDao {
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(GET_ALL_CARS);
             Mapper<Car> carMapper = new CarMapper();
-            LOG.debug("Executed query" + GET_ALL_CARS);
+            LOG.debug("Executed query " + GET_ALL_CARS);
             while (rs.next()) {
                 Car car = carMapper.getEntity(rs);
                 cars.add(car);
@@ -80,11 +95,6 @@ public class JDBCCarDao implements CarDao {
             LOG.error("SQLException when update car status in JdbcCarDao" , e);
         }
         return true;
-    }
-
-    @Override
-    public boolean delete(Long id) {
-        return false;
     }
 
     @Override

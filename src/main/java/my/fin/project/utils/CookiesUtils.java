@@ -12,16 +12,22 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
 
 public class CookiesUtils {
     private static final Logger LOG = Logger.getLogger(CookiesUtils.class);
     public static final String DRIVER_NAME = "driverName";
+    public static final String DRIVER_ID = "driverId";
+    public static final String CAR_ID = "carId";
     public static final String DRIVER_PHONE = "phoneNumber";
     public static final String CAR_MODEL = "carModel";
     public static final String CAR_TYPE = "carType";
     public static final String CAR_NUMBER = "carNumber";
     public static final String PRICE = "price";
     public static final String TIME_WAIT = "timeWait";
+    public static final String DIST_VALUE = "distanceValue";
+    public static final String ORIG_ADDRESS = "originAddress";
+    public static final String DEST_ADDRESS = "destinationAddress";
     public static final String ENCODING = "UTF-8";
 
     private CookiesUtils() {
@@ -44,7 +50,7 @@ public class CookiesUtils {
     }
 
     public static void addCookies(HttpServletResponse response,
-                                  User driver, BigDecimal price, int timeWait, Car car)  {
+                                  User driver, BigDecimal price, int timeWait, Car car, Map<String, String> distanceValues)  {
         String driverName = "";
         try {
             driverName = URLEncoder.encode(driver.getUsername(), ENCODING);
@@ -59,6 +65,11 @@ public class CookiesUtils {
         Cookie carModel = new Cookie(CAR_MODEL, car.getModel());
         Cookie carType = new Cookie(CAR_TYPE, String.valueOf(car.getCarType()));
         Cookie carNumber = new Cookie(CAR_NUMBER, car.getCarNumber());
+        Cookie driverId = new Cookie(DRIVER_ID, String.valueOf(driver.getId()));
+        Cookie carId = new Cookie(CAR_ID, String.valueOf(car.getId()));
+        Cookie distanceVal = new Cookie(DIST_VALUE, distanceValues.get("distanceValue"));
+        Cookie origAddress = new Cookie(ORIG_ADDRESS, distanceValues.get("originAddress").replaceAll("[,\\s+ ]", ""));
+        Cookie arrAddress = new Cookie(DEST_ADDRESS, distanceValues.get("destinationAddress").replaceAll("[,\\s+ ]", ""));
 
         driverNameCookie.setMaxAge(-1);
         phoneNumberCookie.setMaxAge(-1);
@@ -67,6 +78,11 @@ public class CookiesUtils {
         carModel.setMaxAge(-1);
         carType.setMaxAge(-1);
         carNumber.setMaxAge(-1);
+        driverId.setMaxAge(-1);
+        carId.setMaxAge(-1);
+        distanceVal.setMaxAge(-1);
+        origAddress.setMaxAge(-1);
+        arrAddress.setMaxAge(-1);
 
         response.addCookie(driverNameCookie);
         response.addCookie(phoneNumberCookie);
@@ -75,5 +91,11 @@ public class CookiesUtils {
         response.addCookie(carModel);
         response.addCookie(carType);
         response.addCookie(carNumber);
+        response.addCookie(driverId);
+        response.addCookie(carId);
+        response.addCookie(distanceVal);
+        response.addCookie(origAddress);
+        response.addCookie(arrAddress);
+        LOG.info("added cookies to response");
     }
 }

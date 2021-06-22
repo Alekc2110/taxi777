@@ -23,14 +23,14 @@ public class SecurityConfig {
         mapConfig.put(Role.CLIENT, urlClientPatterns);
 
         List<String> urlDRiverPatterns = new ArrayList<>();
-        urlDRiverPatterns.add(Path.SHOW_DRIVER_ORDERS_PAG);
+        urlDRiverPatterns.add(Path.SHOW_DRIVER_ORDERS);
         urlDRiverPatterns.add(Path.DRIVER_ACCOUNT);
         urlDRiverPatterns.add(Path.LOGOUT);
 
         mapConfig.put(Role.DRIVER, urlDRiverPatterns);
 
         List<String> urlAdminPatterns = new ArrayList<>();
-        urlAdminPatterns.add(Path.SHOW_ALL_ORDERS_PAG);
+        urlAdminPatterns.add(Path.SHOW_ALL_ORDERS);
         urlAdminPatterns.add(Path.MAKE_ORDER);
         urlAdminPatterns.add(Path.ENTER_ORDER);
         urlAdminPatterns.add(Path.ADMIN_ACCOUNT);

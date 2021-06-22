@@ -10,8 +10,12 @@ public interface Path {
     String PAGE_DRIVER_ACCOUNT = "/WEB-INF/jsp/driver/driverAccount.jsp";
     String PAGE_REGISTER_CLIENT = "/jsp/common/registerUser.jsp";
     String PAGE_FORBIDDEN_403 = "/WEB-INF/jsp/error/403.jsp";
+    String PAGE_ERROR_500 = "/WEB-INF/jsp/error/500.jsp";
     String PAGE_TAXI_ORDER = "/WEB-INF/jsp/client/order.jsp";
-    String ORDER_STATUS = "/WEB-INF/jsp/client/orderStatus.jsp";
+    String PAGE_ORDER_STATUS = "/WEB-INF/jsp/client/orderStatus.jsp";
+    String PAGE_ORDER_CONFIRM = "/WEB-INF/jsp/client/orderConfirm.jsp";
+    String PAGE_SHOW_DRIVER_ORDERS = "/WEB-INF/jsp/driver/showOrders.jsp";
+    String PAGE_SHOW_ALL_ORDERS = "/WEB-INF/jsp/admin/showAllOrders.jsp";
 
 
    //commands
@@ -25,13 +29,12 @@ public interface Path {
     String CLIENT_ACCOUNT = "/clientAccount";
     String DRIVER_ACCOUNT = "/driverAccount";
     String ADMIN_ACCOUNT = "/adminAccount";
-    String SHOW_ALL_ORDERS_PAG = "/showAllOrders";
-    String SHOW_DRIVER_ORDERS_PAG = "/showDriverOrders";
+    String SHOW_ALL_ORDERS = "/showAllOrders";
+    String SHOW_DRIVER_ORDERS = "/showDriverOrders";
     String FORBIDDEN = "/forbidden";
     String ENTER_ORDER = "/order";
-    String SHOW_CLIENT_ORDER = "/showClientOrder";
-    String NO_COMMAND = "/noCommand";
     String ENTER_NUMBER_OF_ORDER = "/enterNumOrder";
     String REDIRECT = "redirect#";
     String EMPTY_STR = "";
+    String CONFIRM_ORDER= "/confirmOrder";
 }

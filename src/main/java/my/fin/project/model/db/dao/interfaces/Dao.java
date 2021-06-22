@@ -13,8 +13,6 @@ public interface Dao<T> extends AutoCloseable {
 
     boolean update(T t);
 
-    boolean delete(Long id);
-
     void close();
 
 }
