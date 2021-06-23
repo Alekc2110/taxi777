@@ -1,6 +1,8 @@
 package my.fin.project.controller.command.common;
 
 import my.fin.project.controller.command.Command;
+import my.fin.project.exceptions.EntityNotFoundException;
+import my.fin.project.exceptions.EntitySaveDaoException;
 import my.fin.project.model.db.dao.constants.Fields;
 import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.User;
@@ -83,16 +85,20 @@ public class ConfirmOrderCommand extends Command {
      * @return true if new order created
      */
     private boolean confirmOrder(Long clientId, Long driverId, String originAddress, String destAddress, BigDecimal orderPrice, String distance, Long carId) {
-        Long orderId = orderService.createOrder(clientId, driverId, originAddress, destAddress, orderPrice, distance, carId);
-        if (orderId != -1) {
+        try {
+            Long orderId = orderService.createOrder(clientId, driverId, originAddress, destAddress, orderPrice, distance, carId);
             Car car = carService.getCarById(carId);
             car.setStatus(CarStatus.BOOKED);
             carService.updateCarStatus(car);
             LOG.info("order confirmed, orderId: " + orderId);
             return true;
+        } catch (EntitySaveDaoException e) {
+            LOG.error("order not created in 'confirmOrder': " + e);
+            return false;
+        } catch (EntityNotFoundException e){
+            LOG.error("car not found in 'confirmOrder': " + e);
+            return false;
         }
-        return false;
     }
-
 
 }

@@ -2,11 +2,13 @@ package my.fin.project.controller.command.common;
 
 import my.fin.project.controller.command.Command;
 import my.fin.project.exceptions.EmailExistException;
+import my.fin.project.exceptions.EntitySaveDaoException;
 import my.fin.project.exceptions.PhoneNumExistException;
+import my.fin.project.model.entity.Discount;
 import my.fin.project.model.entity.User;
 import my.fin.project.model.entity.enums.Role;
 import my.fin.project.model.service.UserService;
-import my.fin.project.model.service.ValidationService;
+import my.fin.project.controller.Validator;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ public class RegistrationCommand extends Command {
     private static final String BAD_EMAIL = "?badEmail=true";
     private static final String BAD_PHONE = "?badPhoneNumber=true";
     private static final String REG_AGAIN = "?successReg=true";
+    private static final String REG_EXC = "?successReg=false";
     private final Logger LOG = Logger.getLogger(RegistrationCommand.class);
     private UserService userService;
 
@@ -44,7 +47,7 @@ public class RegistrationCommand extends Command {
             LOG.info("Name == null, return register client");
             return PAGE_REGISTER_CLIENT;
         }
-        if (ValidationService.notValidData(name, phoneNumber,
+        if (Validator.notValidData(name, phoneNumber,
                 email, password, repeatPassword)) {
             LOG.info("wrong data input");
             return PAGE_REGISTER_CLIENT + BAD_INPUT;
@@ -56,20 +59,22 @@ public class RegistrationCommand extends Command {
         setEmail(email).
         setRole(Role.CLIENT).
         setPassword(password).build();
-
+        String contextAndServletPath = request.getContextPath() + request.getServletPath();
         try {
             LOG.info("try write to database client");
             userService.saveUser(client);
-        } catch (EmailExistException emailException) {
-            LOG.error("EmailIsAlreadyTaken: ", emailException);
+
+        } catch (EmailExistException e) {
+            LOG.error("EmailIsAlreadyTaken: ", e);
             return PAGE_REGISTER_CLIENT + BAD_EMAIL;
-        } catch (PhoneNumExistException phoneNumberException) {
-            LOG.error("PhoneNumberIsAlreadyTaken ", phoneNumberException);
-            phoneNumberException.printStackTrace();
+        } catch (PhoneNumExistException e) {
+            LOG.error("PhoneNumberIsAlreadyTaken ", e);
             return PAGE_REGISTER_CLIENT + BAD_PHONE;
+        } catch (EntitySaveDaoException e) {
+            LOG.error("Exception when save new user: " +  client);
+            return REDIRECT + contextAndServletPath + LOGIN + REG_EXC;
         }
 
-        String contextAndServletPath = request.getContextPath() + request.getServletPath();
         LOG.info("return login page");
         return REDIRECT + contextAndServletPath + LOGIN + REG_AGAIN;
 

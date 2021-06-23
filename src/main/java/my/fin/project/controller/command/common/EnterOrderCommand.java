@@ -1,6 +1,7 @@
 package my.fin.project.controller.command.common;
 
 import my.fin.project.controller.command.Command;
+import my.fin.project.exceptions.EntityNotFoundException;
 import my.fin.project.model.db.dao.constants.Fields;
 import my.fin.project.model.entity.Car;
 import my.fin.project.model.entity.User;
@@ -46,9 +47,9 @@ public class EnterOrderCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-       final String addressDeparture = request.getParameter(ADDRESS_DEPARTURE_PARAMETER);
-       final String addressArrive = request.getParameter(ADDRESS_ARRIVE_PARAMETER);
-       final String carType = request.getParameter(CAR_TYPE_PARAMETER);
+        final String addressDeparture = request.getParameter(ADDRESS_DEPARTURE_PARAMETER);
+        final String addressArrive = request.getParameter(ADDRESS_ARRIVE_PARAMETER);
+        final String carType = request.getParameter(CAR_TYPE_PARAMETER);
 
         LOG.info(addressDeparture + "!!!!!");
         LOG.info(addressArrive + "!!!!!");
@@ -66,32 +67,17 @@ public class EnterOrderCommand extends Command {
                 LOG.info(String.format("returned list cars: %s of CarType %s: ", carList, carType));
                 if (!carList.isEmpty()) {
                     Optional<Car> availCarOpt = carList.stream().filter(car -> car.getStatus().equals(CarStatus.FREE)).findFirst();
+
                     if (availCarOpt.isPresent()) {
-                        Car orderCar = availCarOpt.get();
-                        LOG.info(String.format("make order with free car: %s: ", orderCar));
-                        User driver = userService.getDriver(orderCar.getId());
-                        BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), orderCar.getCarType(), loginedClient);
-                        LOG.info("orderPrice calculated: " + orderPrice.toString());
-                        int timeWaiting = orderService.getTimeWaiting();
-                        CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, orderCar, distanceValues);
-                        addAttributes(request,driver, orderCar, distanceValues, orderPrice, timeWaiting);
-                        LOG.info("return order confirm page");
-                        return PAGE_ORDER_CONFIRM;
+                       return createOrderDefault(request, response, availCarOpt, distanceValues, loginedClient);
+
                     } else {
                         Optional<Car> bookedCar = carList.stream().filter(car -> car.getStatus().equals(CarStatus.BOOKED)).findFirst();
                         if (bookedCar.isPresent()) {
                             int reqSeats = bookedCar.get().getSeats();
                             Optional<Car> optionalCar = carService.getFreeCarsByNumSeats(reqSeats).stream().findAny();
                             if (optionalCar.isPresent()) {
-                                Car otherCar = optionalCar.get();
-                                LOG.info("make order with alternate car CarType : " + otherCar.getCarType().toString());
-                                User driver = userService.getDriver(otherCar.getId());
-                                BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), otherCar.getCarType(), loginedClient);
-                                LOG.info("orderPrice calculated: " + orderPrice.toString());
-                                int timeWaiting = orderService.getTimeWaiting();
-                                CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, otherCar, distanceValues);
-                                addAttributes(request,driver, otherCar, distanceValues, orderPrice, timeWaiting);
-                                return PAGE_ORDER_CONFIRM + ALT_CAR_PROP;
+                              return createOrderAltVar(request, response, optionalCar, distanceValues, loginedClient);
                             }
                         }
                     }
@@ -141,7 +127,7 @@ public class EnterOrderCommand extends Command {
         return values;
     }
 
-    private void addAttributes(HttpServletRequest request, User driver, Car orderCar, Map<String, String> distanceValues, BigDecimal orderPrice, int timeWaiting){
+    private void addAttributes(HttpServletRequest request, User driver, Car orderCar, Map<String, String> distanceValues, BigDecimal orderPrice, int timeWaiting) {
         request.setAttribute(Fields.DRIVER_ID, driver.getId());
         request.setAttribute(Fields.DRIVER_NAME, driver.getUsername());
         request.setAttribute(Fields.DRIVER_PHONE, driver.getPhoneNumber());
@@ -154,6 +140,45 @@ public class EnterOrderCommand extends Command {
         request.setAttribute(Fields.DIST_VALUE, distanceValues.get("distanceValue"));
         request.setAttribute(Fields.ORIG_ADDRESS, distanceValues.get("originAddress"));
         request.setAttribute(Fields.DEST_ADDRESS, distanceValues.get("destinationAddress"));
+    }
+
+    private String createOrderDefault(HttpServletRequest request, HttpServletResponse response, Optional<Car> availCarOpt, Map<String, String> distanceValues, User loginedClient) {
+        Car orderCar = availCarOpt.get();
+        LOG.info(String.format("make order with free car: %s: ", orderCar));
+        try {
+            User driver = userService.getDriver(orderCar.getId());
+            BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), orderCar.getCarType(), loginedClient);
+            LOG.info("orderPrice calculated: " + orderPrice.toString());
+            int timeWaiting = orderService.getTimeWaiting();
+            CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, orderCar, distanceValues);
+            addAttributes(request, driver, orderCar, distanceValues, orderPrice, timeWaiting);
+            LOG.info("return order confirm page");
+
+            return PAGE_ORDER_CONFIRM;
+
+        } catch (EntityNotFoundException e) {
+            LOG.error("could not found driver for car: " + orderCar);
+            return PAGE_ERROR_500;
+        }
+    }
+
+    private String createOrderAltVar(HttpServletRequest request, HttpServletResponse response, Optional<Car> optionalCar, Map<String, String> distanceValues, User loginedClient) {
+        Car otherCar = optionalCar.get();
+        LOG.info("make order with alternate car CarType : " + otherCar.getCarType().toString());
+        try {
+            User driver = userService.getDriver(otherCar.getId());
+            BigDecimal orderPrice = orderService.calculateOrderPrice(Integer.parseInt(distanceValues.get("distanceValue")), otherCar.getCarType(), loginedClient);
+            LOG.info("orderPrice calculated: " + orderPrice.toString());
+            int timeWaiting = orderService.getTimeWaiting();
+            CookiesUtils.addCookies(response, driver, orderPrice, timeWaiting, otherCar, distanceValues);
+            addAttributes(request, driver, otherCar, distanceValues, orderPrice, timeWaiting);
+
+            return PAGE_ORDER_CONFIRM + ALT_CAR_PROP;
+
+        } catch (EntityNotFoundException e) {
+            LOG.error("could not found driver for car: " + otherCar);
+            return PAGE_ERROR_500;
+        }
     }
 
 }

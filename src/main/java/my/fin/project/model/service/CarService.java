@@ -1,5 +1,6 @@
 package my.fin.project.model.service;
 
+import my.fin.project.exceptions.EntityNotFoundException;
 import my.fin.project.model.db.DaoFactory;
 import my.fin.project.model.db.dao.interfaces.CarDao;
 import my.fin.project.model.entity.Car;
@@ -8,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CarService {
@@ -41,7 +43,8 @@ public class CarService {
     public Car getCarById(Long carId) {
         try (CarDao dao = factory.createCarDao()) {
             LOG.debug("find car by carId: " + carId);
-            return dao.getById(carId);
+            Optional<Car> carOpt = dao.getById(carId);
+            return carOpt.orElseThrow(EntityNotFoundException::new);
         }
     }
 }

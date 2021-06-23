@@ -5,9 +5,9 @@ import java.util.Optional;
 
 public interface Dao<T> extends AutoCloseable {
 
-    Long save(T entity);
+    Optional<Long> save(T entity);
 
-    T getById(Long id);
+    Optional<T> getById(Long id);
 
     List<T> findAll();
 

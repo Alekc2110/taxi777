@@ -11,7 +11,7 @@ public interface UserDao extends Dao<User> {
 
     boolean checkUser(String phoneNumber, String password);
 
-    User getUser(String phoneNumber, String password);
+    Optional<User> getUser(String phoneNumber, String password);
 
     boolean saveUserRole(Long id, Role userRole);
 
@@ -19,10 +19,11 @@ public interface UserDao extends Dao<User> {
 
     boolean isPhoneNumberExists(String phoneNumber);
 
-    User findDriverByCarId(Long carId);
+    Optional<User> findDriverByCarId(Long carId);
 
-    Discount getUserDiscount(Long clientId);
+    Optional<Discount> getUserDiscount(Long clientId);
 
     boolean updateUserDiscount(User client, BigDecimal orderPrice);
 
+    boolean saveUserDiscount(Discount discount);
 }

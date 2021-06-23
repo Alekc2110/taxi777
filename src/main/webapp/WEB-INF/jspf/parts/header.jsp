@@ -37,7 +37,7 @@
 
                 <a href="${pageContext.request.contextPath}/taxi/login">
                     <div style="margin: auto; float: right; height: 36px;">
-                        <img src="${pageContext.request.contextPath}/img/enter-icon.jpg" style="height: 56px">
+                        <img src="${pageContext.request.contextPath}/img/login-user.png" style="height: 56px">
                     </div>
                 </a>
             </div>

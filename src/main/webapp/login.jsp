@@ -28,6 +28,9 @@
                     <c:if test="${param.successReg == true}">
                         <p class="alert-success"><fmt:message key="login.successful.reconnect"/></p>
                     </c:if>
+                    <c:if test="${param.successReg == false}">
+                        <p class="errorsM"><fmt:message key="login.registration.exception.input"/></p>
+                    </c:if>
                     <c:if test="${param.wrongData == true}">
                         <p class="errorsM"><fmt:message key="login.incorrect.input"/></p>
                     </c:if>

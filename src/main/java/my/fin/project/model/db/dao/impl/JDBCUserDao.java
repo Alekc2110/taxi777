@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static my.fin.project.model.db.dao.constants.Queries.*;
 
@@ -32,7 +33,7 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public User getById(Long id) {
+    public Optional<User> getById(Long id) {
         userMapper = new UserMapper();
         User entity = null;
         try (PreparedStatement ps = connection.prepareStatement(GET_USER_BY_ID)) {
@@ -46,7 +47,7 @@ public class JDBCUserDao implements UserDao {
         } catch (SQLException e) {
             LOG.error("SQLException occurred in JdbcDriverDao", e);
         }
-        return entity;
+        return Optional.ofNullable(entity);
     }
 
     @Override
@@ -68,10 +69,9 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public User getUser(String phoneNumber, String password) {
+    public Optional<User> getUser(String phoneNumber, String password) {
         userMapper = new UserMapper();
-        User result = new User.Builder().build();
-        result.setId(-1L);
+        User result = null;
         try (PreparedStatement ps = connection.prepareStatement(Queries.GET_BY_PHONE_PASSWORD)) {
             ps.setString(1, phoneNumber);
             ps.setString(2, password);
@@ -84,7 +84,7 @@ public class JDBCUserDao implements UserDao {
         } catch (SQLException e) {
             LOG.error("SQLException occurred in JdbcDriverDao", e);
         }
-        return result;
+        return Optional.ofNullable(result);
     }
 
     @Override
@@ -135,10 +135,9 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public User findDriverByCarId(Long carId) {
+    public Optional<User> findDriverByCarId(Long carId) {
         Mapper<User> driverMapper = new DriverMapper();
-        User driver = new User.Builder().build();
-        driver.setId(-1L);
+        User driver = null;
         try (PreparedStatement ps = connection.prepareStatement(GET_DRIVER_BY_CAR_ID)) {
             ps.setLong(1, carId);
             LOG.debug("Executed query" + GET_DRIVER_BY_CAR_ID);
@@ -150,14 +149,13 @@ public class JDBCUserDao implements UserDao {
             LOG.error("SQLException when findDriverByCarId in UserDao", e);
         }
         LOG.debug("found driver: " + driver);
-        return driver;
+        return Optional.ofNullable(driver);
     }
 
     @Override
-    public Discount getUserDiscount(Long clientId) {
+    public Optional<Discount> getUserDiscount(Long clientId) {
         Mapper<Discount> discountMapper = new DiscountMapper();
-        Discount discount = new Discount();
-        discount.setId(-1L);
+        Discount discount = null;
         try (PreparedStatement ps = connection.prepareStatement(GET_USER_DISCOUNT)) {
             ps.setLong(1, clientId);
             ResultSet rs = ps.executeQuery();
@@ -167,30 +165,29 @@ public class JDBCUserDao implements UserDao {
         } catch (SQLException e) {
             LOG.error("SQLException when getUserDiscount in UserDao", e);
         }
-        return discount;
+        return Optional.ofNullable(discount);
 
     }
 
     @Override
-    public Long save(User user) {
+    public Optional<Long> save(User user) {
         ResultSet generatedKey = null;
-        Long id = null;
         try (PreparedStatement ps = connection.prepareStatement(SAVE_USER_CLIENT, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getPhoneNumber());
             ps.setString(4, user.getEmail());
             if (ps.executeUpdate() != 1) {
-                return -1L;
+                return Optional.empty();
             }
             generatedKey = ps.getGeneratedKeys();
             if (generatedKey.next()) {
-                id = generatedKey.getLong(1);
-                return id;
+                Long id = generatedKey.getLong(1);
+                return Optional.of(id);
             }
         } catch (SQLException e) {
             LOG.info("SQLException in 'saveUser' UserDao: " + e);
-            return -1L;
+            return Optional.empty();
         } finally {
             try {
                 if (generatedKey != null) generatedKey.close();
@@ -198,18 +195,21 @@ public class JDBCUserDao implements UserDao {
                 LOG.info("SQLException when closing ResultSet in 'saveUser': " + e);
             }
         }
-        return id;
+        return Optional.empty();
     }
 
     @Override
     public boolean updateUserDiscount(User client, BigDecimal orderPrice) {
         try (PreparedStatement ps = connection.prepareStatement(UPDATE_DISCOUNT)) {
             connection.setAutoCommit(false);
-            Discount userDiscount = getUserDiscount(client.getId());
-            PriceUtils.checkUserDiscount(userDiscount, orderPrice);
-            ps.setInt(1, userDiscount.getDiscountRate());
-            ps.setInt(2, userDiscount.getTotalSumRides());
-            ps.setLong(3, userDiscount.getId());
+            Optional<Discount> userDiscountOpt = getUserDiscount(client.getId());
+            if (userDiscountOpt.isPresent()) {
+                Discount userDiscount = userDiscountOpt.get();
+                PriceUtils.checkUserDiscount(userDiscount, orderPrice);
+                ps.setInt(1, userDiscount.getDiscountRate());
+                ps.setInt(2, userDiscount.getTotalSumRides());
+                ps.setLong(3, userDiscount.getId());
+            }
             if (ps.executeUpdate() != 1) {
                 return false;
             }
@@ -233,7 +233,36 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {return null;
+    public boolean saveUserDiscount(Discount discount) {
+        ResultSet generatedKey = null;
+        try (PreparedStatement ps = connection.prepareStatement(SAVE_USER_DISCOUNT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setLong(1, discount.getClientId());
+            ps.setInt(2, discount.getDiscountRate());
+            ps.setInt(3, discount.getTotalSumRides());
+            if (ps.executeUpdate() != 1) {
+                return false;
+            }
+            generatedKey = ps.getGeneratedKeys();
+            if (generatedKey.next()) {
+                generatedKey.getLong(1);
+                return true;
+            }
+        } catch (SQLException e) {
+            LOG.info("SQLException in 'saveUser' UserDao: " + e);
+            return false;
+        } finally {
+            try {
+                if (generatedKey != null) generatedKey.close();
+            } catch (SQLException e) {
+                LOG.info("SQLException when closing ResultSet in 'saveUser': " + e);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package my.fin.project.controller.command.common;
 
 import my.fin.project.controller.command.Command;
+import my.fin.project.exceptions.EntityNotFoundException;
 import my.fin.project.model.entity.User;
 import my.fin.project.model.entity.enums.Role;
 import my.fin.project.model.service.UserService;
@@ -27,16 +28,15 @@ public class EnterLoginCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        final String phoneNumber = request.getParameter(PHONE_PARAMETER);
-        final String password = request.getParameter(PASSWORD_PARAMETER);
+        String phoneNumber = request.getParameter(PHONE_PARAMETER);
+        String password = request.getParameter(PASSWORD_PARAMETER);
         User user;
         String contextAndServletPath = request.getContextPath() + request.getServletPath();
-        LOG.info("*************************contextPath:" + request.getContextPath());
-        LOG.info("*************************servletPath:" + request.getServletPath());
-        LOG.info("*************************requestURI:" + request.getRequestURI());
+        LOG.info("contextPath:" + request.getContextPath());
+        LOG.info("servletPath:" + request.getServletPath());
+        LOG.info("requestURI:" + request.getRequestURI());
         LOG.info("check data phone number and password" + phoneNumber + " " + password);
         if (inputWrongData(phoneNumber, password)) {
-           // request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_STRING);
             LOG.info("wrong data");
             return PAGE_LOGIN + WRONG_DATA;
         } else {
@@ -55,7 +55,13 @@ public class EnterLoginCommand extends Command {
                     return REDIRECT + contextAndServletPath + DRIVER_ACCOUNT;
                 }
             }
-            user = userService.getUser(phoneNumber, password);
+            try {
+                user = userService.getUser(phoneNumber, password);
+            } catch (EntityNotFoundException e) {
+                LOG.error("could not found user in 'EnterLoginCommand' " + e);
+                return PAGE_ERROR_500;
+            }
+
             LoginUserUtils.saveLoginedUser(request.getSession(), user);
             if (user.getRole().equals(Role.CLIENT)) {
                 LOG.info("return client account");

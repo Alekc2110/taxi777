@@ -1,6 +1,7 @@
 package my.fin.project.model.service;
 
 import com.google.gson.Gson;
+import my.fin.project.exceptions.EntitySaveDaoException;
 import my.fin.project.model.db.DaoFactory;
 import my.fin.project.model.db.dao.interfaces.OrderDao;
 import my.fin.project.model.db.dao.interfaces.UserDao;
@@ -20,7 +21,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 public class OrderService {
     private static final Logger LOG = Logger.getLogger(OrderService.class);
@@ -70,19 +73,19 @@ public class OrderService {
         } catch (IOException e) {
             LOG.error("IOException in OrderService: " + e);
         }
-
-
         return new Gson().fromJson(outputString.toString(), DistancePojo.class);
     }
 
     public BigDecimal calculateOrderPrice(Integer distance, CarType carType, User client) {
+        BigDecimal orderPrice = BigDecimal.ZERO;
         try (UserDao dao = factory.createUserDao()) {
-            Discount userDiscount = dao.getUserDiscount(client.getId());
-            if (userDiscount.getId() != -1) {
-                return PriceUtils.getOrderPriceDisc(distance, carType, userDiscount.getDiscountRate());
+            Optional<Discount> userDiscountOpt = dao.getUserDiscount(client.getId());
+            if(userDiscountOpt.isPresent()){
+                Discount discount = userDiscountOpt.get();
+                orderPrice = PriceUtils.getOrderPriceDisc(distance, carType, discount.getDiscountRate());
             }
-            return PriceUtils.getOrderPrice(distance, carType);
         }
+        return orderPrice;
     }
 
     public Long createOrder(Long clientId, Long driverId, String originAddress, String destAddress, BigDecimal orderPrice, String distance, Long carId) {
@@ -98,7 +101,8 @@ public class OrderService {
                 .setDistance(distance)
                 .build();
         try (OrderDao dao = factory.createOrderDao()) {
-            return dao.save(order);
+            Optional<Long> savedIdOpt = dao.save(order);
+            return savedIdOpt.orElseThrow(EntitySaveDaoException::new);
         }
     }
 
@@ -127,7 +131,6 @@ public class OrderService {
         }
 
     }
-
 
     public int getTimeWaiting() {
         return (int) (Math.random() * 10);

@@ -1,16 +1,18 @@
 package my.fin.project.model.service;
 
 import my.fin.project.exceptions.EmailExistException;
+import my.fin.project.exceptions.EntityNotFoundException;
+import my.fin.project.exceptions.EntitySaveDaoException;
 import my.fin.project.exceptions.PhoneNumExistException;
 import my.fin.project.model.db.DaoFactory;
 import my.fin.project.model.db.dao.interfaces.UserDao;
 import my.fin.project.model.entity.Discount;
 import my.fin.project.model.entity.User;
-import my.fin.project.model.entity.enums.Role;
 import my.fin.project.utils.SimplePasswordEncoder;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 
 public class UserService {
@@ -34,11 +36,12 @@ public class UserService {
     public User getUser(String phoneNumber, String password) {
         try (UserDao dao = factory.createUserDao()) {
             LOG.debug("getUser UserDao");
-            return dao.getUser(phoneNumber, passwordEncoder.encode(password));
+            Optional<User> userOptional = dao.getUser(phoneNumber, passwordEncoder.encode(password));
+            return userOptional.orElseThrow(EntityNotFoundException::new);
         }
     }
 
-    public Long saveUser(User client) {
+    public boolean saveUser(User client) {
         try (UserDao dao = factory.createUserDao()) {
             LOG.debug("created UserDao");
             boolean isTakenEmail = dao.isEmailExists(client.getEmail());
@@ -52,23 +55,19 @@ public class UserService {
                 throw new PhoneNumExistException("This phone number is already registered in DB");
             }
             client.setPassword(passwordEncoder.encode(client.getPassword()));
-            Long userId = dao.save(client);
-            saveUserRole(userId, client.getRole());
-            return userId;
-        }
-    }
+            Optional<Long> userIdOpt = dao.save(client);
+            Long userId = userIdOpt.orElseThrow(EntitySaveDaoException::new);
+            boolean isDiscCreated = createClientDiscount(userId, dao);
+            boolean isSavedRole = dao.saveUserRole(userId, client.getRole());
 
-    private void saveUserRole(Long id, Role userRole) {
-        try (UserDao dao = factory.createUserDao()) {
-            if (id != -1) {
-                dao.saveUserRole(id, userRole);
-            }
+            return isDiscCreated && isSavedRole;
         }
     }
 
     public User getDriver(Long carId) {
         try (UserDao dao = factory.createUserDao()) {
-            return dao.findDriverByCarId(carId);
+            Optional<User> driverOpt = dao.findDriverByCarId(carId);
+            return driverOpt.orElseThrow(EntityNotFoundException::new);
         }
     }
 
@@ -76,5 +75,14 @@ public class UserService {
         try (UserDao dao = factory.createUserDao()) {
             return dao.updateUserDiscount(client, orderPrice);
         }
+    }
+
+    private boolean createClientDiscount(Long clientId, UserDao dao) {
+        Discount discount = new Discount.Builder()
+                .setClientId(clientId)
+                .setDiscountRate(0)
+                .setTotalSumRides(0)
+                .build();
+        return dao.saveUserDiscount(discount);
     }
 }

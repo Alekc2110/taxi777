@@ -11,6 +11,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static my.fin.project.model.db.dao.constants.Queries.*;
 
@@ -25,9 +26,8 @@ public class JDBCOrderDao implements OrderDao {
 
 
     @Override
-    public Long save(Order order) {
+    public Optional<Long> save(Order order) {
         ResultSet generatedKey = null;
-        Long id = null;
         try (PreparedStatement ps = connection.prepareStatement(SAVE_ORDER, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, String.valueOf(order.getOrderStatus()));
             ps.setLong(2, order.getClientId());
@@ -40,16 +40,16 @@ public class JDBCOrderDao implements OrderDao {
             ps.setString(9, order.getDistance());
             LOG.debug("Executed query: " + SAVE_ORDER);
             if (ps.executeUpdate() != 1) {
-                return -1L;
+                return Optional.empty();
             }
             generatedKey = ps.getGeneratedKeys();
             if (generatedKey.next()) {
-                id = generatedKey.getLong(1);
-                return id;
+                Long id = generatedKey.getLong(1);
+                return Optional.of(id);
             }
         } catch (SQLException e) {
             LOG.info("SQLException in 'saveOrder' OrderDao: " + e);
-            return -1L;
+            return Optional.empty();
         } finally {
             try {
                 if (generatedKey != null) generatedKey.close();
@@ -57,7 +57,7 @@ public class JDBCOrderDao implements OrderDao {
                 LOG.info("SQLException when closing ResultSet in 'saveOrder': " + e);
             }
         }
-        return id;
+        return Optional.empty();
     }
 
     @Override
@@ -65,9 +65,7 @@ public class JDBCOrderDao implements OrderDao {
         int countOrders = 0;
         try (PreparedStatement ps = connection.prepareStatement(COUNT_DRIVER_ORDERS)) {
             ps.setLong(1, driverId);
-
             final ResultSet rs = ps.executeQuery();
-
             LOG.debug("Executed query: " + COUNT_DRIVER_ORDERS);
             if (rs.next()) {
                 LOG.debug("check if rs has next");
@@ -83,9 +81,7 @@ public class JDBCOrderDao implements OrderDao {
     public int getCountAllOrders() {
         int countOrders = 0;
         try (Statement st = connection.createStatement()) {
-
             final ResultSet rs = st.executeQuery(COUNT_ALL_ORDERS);
-
             LOG.debug("Executed query: " + COUNT_ALL_ORDERS);
             if (rs.next()) {
                 LOG.debug("check if rs has next");
@@ -144,7 +140,7 @@ public class JDBCOrderDao implements OrderDao {
 
 
     @Override
-    public Order getById(Long id) {
+    public Optional<Order> getById(Long id) {
         return null;
     }
 

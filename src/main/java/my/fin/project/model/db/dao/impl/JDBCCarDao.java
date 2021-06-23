@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static my.fin.project.model.db.dao.constants.Queries.*;
 
@@ -35,19 +36,19 @@ public class JDBCCarDao implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            LOG.error("SQLException when getCarsByType in JdbcCarDao" , e);
+            LOG.error("SQLException when getCarsByType in JdbcCarDao", e);
             return cars;
         }
     }
 
     @Override
-    public Long save(Car entity) {
+    public Optional<Long> save(Car entity) {
         return null;
     }
 
     @Override
-    public Car getById(Long carId) {
-        Car car = new Car();
+    public Optional<Car> getById(Long carId) {
+        Car car = null;
         try (PreparedStatement ps = connection.prepareStatement(GET_CAR_BY_ID)) {
             ps.setLong(1, carId);
             ResultSet rs = ps.executeQuery();
@@ -57,12 +58,9 @@ public class JDBCCarDao implements CarDao {
                 car = carMapper.getEntity(rs);
             }
         } catch (SQLException e) {
-            LOG.error("SQLException when getCarById in JdbcCarDao" , e);
-            car = new Car.Builder().build();
-            car.setId(-1L);
-            return car;
+            LOG.error("SQLException when getCarById in JdbcCarDao", e);
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -78,27 +76,27 @@ public class JDBCCarDao implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            LOG.error("SQLException when findAll in JdbcCarDao" , e);
-            return null;
+            LOG.error("SQLException when findAll in JdbcCarDao", e);
+            return cars;
         }
     }
 
     @Override
     public boolean update(Car car) {
         try (PreparedStatement ps = connection.prepareStatement(UPDATE_CAR_STATUS)) {
-                ps.setString(1, String.valueOf(car.getStatus()));
-                ps.setLong(2, car.getId());
+            ps.setString(1, String.valueOf(car.getStatus()));
+            ps.setLong(2, car.getId());
             if (ps.executeUpdate() != 1) {
                 return false;
             }
         } catch (SQLException e) {
-            LOG.error("SQLException when update car status in JdbcCarDao" , e);
+            LOG.error("SQLException when update car status in JdbcCarDao", e);
         }
         return true;
     }
 
     @Override
-    public void close()  {
+    public void close() {
         try {
             connection.close();
         } catch (SQLException e) {

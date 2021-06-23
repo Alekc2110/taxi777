@@ -19,7 +19,7 @@ public class SecurityUtils {
         return false;
     }
 
-    public static boolean hasPermission(HttpServletRequest request, Role personRole) {
-        return SecurityConfig.getUrlPatternsForRole(personRole).contains(request.getPathInfo());
+    public static boolean hasPermission(HttpServletRequest request, Role userRole) {
+        return SecurityConfig.getUrlPatternsForRole(userRole).contains(request.getPathInfo());
     }
 }

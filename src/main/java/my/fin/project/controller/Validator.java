@@ -1,15 +1,15 @@
-package my.fin.project.model.service;
+package my.fin.project.controller;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ValidationService {
+public class Validator {
     private static final String EMAIL_PATTERN = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
     private static final String CORRECT_PASSWORD = "[a-zA-Z0-9]{4,20}";
     private static final String CORRECT_NAME = "[a-zA-Z\\p{IsCyrillic}]{3,20}";
     private static final String CORRECT_PHONE_NUMBER = "^(\\+380)([0-9]{9})";
 
-    private ValidationService() {
+    private Validator() {
     }
 
     private static boolean isCorrectEmail(String email) {
