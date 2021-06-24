@@ -32,7 +32,7 @@
                             <button type="submit" class="account-admin-btns"><fmt:message key="admin.account.logout"/></button>
                         </form>
                         <a href="${pageContext.request.contextPath}/taxi/showAllOrders?pagination=1">
-                            <button class="account-driver-btns"><fmt:message key="admin.account.show.pag"/></button>
+                            <button class="account-admin-btns"><fmt:message key="admin.account.show.pag"/></button>
                         </a>
                     </div>
                 </div>

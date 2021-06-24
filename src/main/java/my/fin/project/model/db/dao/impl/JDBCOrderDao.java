@@ -24,7 +24,6 @@ public class JDBCOrderDao implements OrderDao {
         this.connection = connection;
     }
 
-
     @Override
     public Optional<Long> save(Order order) {
         ResultSet generatedKey = null;
@@ -136,22 +135,6 @@ public class JDBCOrderDao implements OrderDao {
             LOG.error("SQLException in 'getAllOrders' in JdbcOrderDao", e);
             return orders;
         }
-    }
-
-
-    @Override
-    public Optional<Order> getById(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<Order> findAll() {
-        return null;
-    }
-
-    @Override
-    public boolean update(Order order) {
-        return false;
     }
 
     @Override

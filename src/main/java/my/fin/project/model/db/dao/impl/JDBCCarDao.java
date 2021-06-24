@@ -41,10 +41,6 @@ public class JDBCCarDao implements CarDao {
         }
     }
 
-    @Override
-    public Optional<Long> save(Car entity) {
-        return null;
-    }
 
     @Override
     public Optional<Car> getById(Long carId) {

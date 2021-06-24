@@ -606,3 +606,7 @@ p:empty {
 .text_section {
     margin-bottom: 20px;
 }
+
+.cursor{
+    cursor: pointer;
+}

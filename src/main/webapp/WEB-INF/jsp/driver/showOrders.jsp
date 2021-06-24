@@ -18,53 +18,33 @@
         </div>
     </header>
 
-    <div class="center">
-        <div class="nazar">
-            <div class="ordersHeader">
-                <p><fmt:message key="showOrders.orders.title"/></p>
-            </div>
-            <div class="viewData">
-                <div class="idOrder">
-                    <p><strong><fmt:message key="showOrders.orders.id"/></strong></p>
-                </div>
-                <div class="street">
-                    <p><strong><fmt:message key="showOrders.street.dep"/></strong></p>
-                </div>
-                <div class="street">
-                    <p><strong><fmt:message key="showOrders.street.arr"/></strong></p>
-                </div>
-                <div class="cost">
-                    <p><strong><fmt:message key="showOrders.price"/></strong></p>
-                </div>
-                <div class="date">
-                    <p><strong><fmt:message key="showOrders.creation.date"/></strong></p>
-                </div>
-                <div class="distance">
-                    <p><strong><fmt:message key="showOrders.distance"/></strong></p>
-                </div>
-            </div>
-            <c:forEach items="${requestScope.orderList}" var="order" begin="0" end="${requestScope.recordPerPage -1}">
-                <div class="viewData data">
-                    <div class="idOrder">
-                        <p><c:out value="${order.id}"/></p>
-                    </div>
-                    <div class="street">
-                        <p><c:out value="${order.originAddress}"/></p>
-                    </div>
-                    <div class="street">
-                        <p><c:out value="${order.arriveAddress}"/></p>
-                    </div>
-                    <div class="cost">
-                        <p><c:out value="${order.cost}"/></p>
-                    </div>
-                    <div class="date">
-                        <p><c:out value="${order.creationDate}"/></p>
-                    </div>
-                    <div class="distance">
-                        <p><c:out value="${order.distance}"/></p>
-                    </div>
-                </div>
-            </c:forEach>
+    <div class="ordersHeader">
+        <p><fmt:message key="driver.account.show.orders"/></p>
+    </div>
+    <table id="allOrders" class="table table-bordered table-sm">
+        <thead class="thead-light">
+        <tr>
+            <th data-type="integer" class="th-sm"><fmt:message key="showOrders.orders.id"/></th>
+            <th data-type="text" class="th-sm"><fmt:message key="showOrders.street.dep"/></th>
+            <th data-type="text" class="th-sm"><fmt:message key="showOrders.street.arr"/></th>
+            <th data-type="integer" class="th-sm"><fmt:message key="showOrders.price"/></th>
+            <th data-type="date" class="th-sm"><fmt:message key="showOrders.creation.date"/></th>
+            <th data-type="integer" class="th-sm"><fmt:message key="showOrders.distance"/></th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <c:forEach items="${requestScope.orderList}" var="order" begin="0" end="${requestScope.recordPerPage -1}">
+            <tr>
+                <td><c:out value="${order.id}"/></td>
+                <td><c:out value="${order.originAddress}"/></td>
+                <td><c:out value="${order.arriveAddress}"/></td>
+                <td><c:out value="${order.cost}"/></td>
+                <td><c:out value="${order.creationDate}"/></td>
+                <td><c:out value="${order.distance}"/></td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
         </div>
         <nav aria-label="...">
             <ul class="pagination pagination-sm justify-content-center">

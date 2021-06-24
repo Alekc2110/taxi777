@@ -7,7 +7,9 @@ import my.fin.project.model.entity.enums.Role;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-public interface UserDao extends Dao<User> {
+public interface UserDao extends AutoCloseable {
+
+    Optional<User> getById(Long id);
 
     boolean checkUser(String phoneNumber, String password);
 
@@ -23,7 +25,11 @@ public interface UserDao extends Dao<User> {
 
     Optional<Discount> getUserDiscount(Long clientId);
 
+    Optional<Long> save(User user);
+
     boolean updateUserDiscount(User client, BigDecimal orderPrice);
 
     boolean saveUserDiscount(Discount discount);
+
+    void close();
 }

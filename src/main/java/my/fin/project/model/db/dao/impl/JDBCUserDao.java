@@ -261,16 +261,6 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {
-        return null;
-    }
-
-    @Override
-    public boolean update(User user) {
-        return false;
-    }
-
-    @Override
     public void close() {
         try {
             connection.close();
