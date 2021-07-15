@@ -14,7 +14,7 @@
 <body class="home blog">
 <div id="wrapper">
     <header id="header">
-        <jsp:include page="/WEB-INF/jspf/parts/header1.jsp"/>
+        <jsp:include page="/WEB-INF/jspf/parts/header.jsp"/>
         <div class="header_green">
             <jsp:include page="/WEB-INF/jspf/parts/navi_block.jsp"/>
         </div>

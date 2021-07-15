@@ -4,6 +4,7 @@ import my.fin.project.model.entity.enums.Role;
 
 public class User extends Person {
 
+
     private String email;
 
     public User() {

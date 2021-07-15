@@ -3,10 +3,10 @@ package my.fin.project.model.entity;
 import my.fin.project.model.entity.enums.Role;
 
 public abstract class Person extends Entity {
-    protected String username;
-    protected String password;
-    protected String phoneNumber;
-    protected Role role;
+    String username;
+    String password;
+    String phoneNumber;
+    Role role;
 
     public String getUsername() {
         return username;
